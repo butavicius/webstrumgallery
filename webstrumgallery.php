@@ -1,28 +1,29 @@
 <?php
+
 /**
-* 2007-2022 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2022 PrestaShop SA
-*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-2022 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2022 PrestaShop SA
+ *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -39,11 +40,7 @@ class Webstrumgallery extends Module
         $this->version = '1.0.0';
         $this->author = 'Simas Butavičius';
         $this->need_instance = 0;
-
-        /**
-         * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
-         */
-        $this->bootstrap = true;
+        $this->bootstrap = false;
 
         parent::__construct();
 
@@ -59,14 +56,20 @@ class Webstrumgallery extends Module
      */
     public function install()
     {
+        // TODO: Probably won't need this
+        // setting. Probably won't need configForm at all
         Configuration::updateValue('WEBSTRUMGALLERY_LIVE_MODE', false);
 
-        include(dirname(__FILE__).'/sql/install.php');
+        // TODO: I guess we won't need SQL table. Images will be uploaded to
+        // module's folder. See /img/p/ folder for an example on how default
+        // product images are stored.
+
+        // // include(dirname(__FILE__).'/sql/install.php');
 
         return parent::install() &&
             $this->registerHook('header') &&
             $this->registerHook('backOfficeHeader') &&
-            $this->registerHook('displayAdminProductsExtra') &&
+            $this->registerHook('displayAdminProductsMainStepLeftColumnBottom') &&
             $this->registerHook('displayProductExtraContent');
     }
 
@@ -74,7 +77,9 @@ class Webstrumgallery extends Module
     {
         Configuration::deleteByName('WEBSTRUMGALLERY_LIVE_MODE');
 
-        include(dirname(__FILE__).'/sql/uninstall.php');
+        // TODO: If we won't need SQL table, delete the following too
+
+        // // include(dirname(__FILE__).'/sql/uninstall.php');
 
         return parent::uninstall();
     }
@@ -93,9 +98,9 @@ class Webstrumgallery extends Module
 
         $this->context->smarty->assign('module_dir', $this->_path);
 
-        $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
+        $output = $this->context->smarty->fetch($this->local_path . 'views/templates/admin/configure.tpl');
 
-        return $output.$this->renderForm();
+        return $output . $this->renderForm();
     }
 
     /**
@@ -114,7 +119,7 @@ class Webstrumgallery extends Module
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'submitWebstrumgalleryModule';
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
-            .'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+            . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
 
         $helper->tpl_vars = array(
@@ -129,13 +134,17 @@ class Webstrumgallery extends Module
     /**
      * Create the structure of your form.
      */
+
+    // TODO: Placeholder structure from module template. Probably won't use any
+    // config at all.
+
     protected function getConfigForm()
     {
         return array(
             'form' => array(
                 'legend' => array(
-                'title' => $this->l('Settings'),
-                'icon' => 'icon-cogs',
+                    'title' => $this->l('Settings'),
+                    'icon' => 'icon-cogs',
                 ),
                 'input' => array(
                     array(
@@ -203,32 +212,54 @@ class Webstrumgallery extends Module
     }
 
     /**
-    * Add the CSS & JavaScript files you want to be loaded in the BO.
-    */
+     * Add the CSS & JavaScript files you want to be loaded in the BO.
+     */
+
+    // TODO: Looks like addJS and addCSS are deprecated. Change to
+    // registerStyleSheet, registerJavaScript. Probably won't need to add
+    // anything to BO header if we manage to reuse primary product image
+    // uploader/gallery components
+
     public function hookBackOfficeHeader()
     {
         if (Tools::getValue('module_name') == $this->name) {
-            $this->context->controller->addJS($this->_path.'views/js/back.js');
-            $this->context->controller->addCSS($this->_path.'views/css/back.css');
+            $this->context->controller->addJS($this->_path . 'views/js/back.js');
+            $this->context->controller->addCSS($this->_path . 'views/css/back.css');
         }
     }
 
     /**
      * Add the CSS & JavaScript files you want to be added on the FO.
      */
+
+    // TODO: Looks like addJS and addCSS are deprecated. Change to
+    // registerStyleSheet, registerJavaScript. We will probably include some JS
+    // image slider/gallery to render images on FO.
+
     public function hookHeader()
     {
-        $this->context->controller->addJS($this->_path.'/views/js/front.js');
-        $this->context->controller->addCSS($this->_path.'/views/css/front.css');
+        $this->context->controller->addJS($this->_path . '/views/js/front.js');
+        $this->context->controller->addCSS($this->_path . '/views/css/front.css');
     }
 
-    public function hookDisplayAdminProductsExtra()
+    public function hookDisplayAdminProductsMainStepLeftColumnBottom()
     {
+
+        // TODO:
+
+        // Figure out how to reuse main product image gallery twig template.
+        // Instead of uploading to /img/p as product normally does, upload to /modules/webstrumgallery/img/{productId}/{imgId}
+
+        // Figure out how to use same thumbnail generation tools as per original product gallery
+
         /* Place your code here. */
     }
 
     public function hookDisplayProductExtraContent()
     {
+        // TODO:
+        // Will need to create ProductExtraContent instance.
+        // see displayProductExtraContent https://devdocs.prestashop.com/1.7/modules/concepts/hooks/list-of-hooks/
         /* Place your code here. */
     }
 }
