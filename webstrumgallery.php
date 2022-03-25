@@ -25,11 +25,13 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class Webstrumgallery extends Module
+class WebstrumGallery extends Module
 {
     protected $config_form = false;
 
@@ -47,7 +49,7 @@ class Webstrumgallery extends Module
         $this->displayName = $this->l('Webstrum Gallery');
         $this->description = $this->l('This module will display an additional gallery in product page.');
 
-        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = array('min' => '1.7.7.0', 'max' => _PS_VERSION_);
     }
 
     /**
@@ -58,10 +60,17 @@ class Webstrumgallery extends Module
     {
 
         return parent::install() &&
-            $this->registerHook('header') &&
-            $this->registerHook('backOfficeHeader') &&
-            $this->registerHook('displayAdminProductsMainStepLeftColumnBottom') &&
-            $this->registerHook('displayProductExtraContent');
+            // $this->registerHook('header') &&
+            $this->registerHook('displayBackOfficeHeader') &&
+            $this->registerHook('displayAdminProductsMainStepLeftColumnBottom');
+        // $this->registerHook('displayProductExtraContent');
+    }
+
+    public function hookDisplayBackOfficeHeader()
+    {
+        $this->context->controller->addJS(
+            $this->_path . 'views/js/back.js'
+        );
     }
 
     /**
@@ -73,13 +82,13 @@ class Webstrumgallery extends Module
     // anything to BO header if we manage to reuse primary product image
     // uploader/gallery components
 
-    public function hookBackOfficeHeader()
-    {
-        if (Tools::getValue('module_name') == $this->name) {
-            $this->context->controller->addJS($this->_path . 'views/js/back.js');
-            $this->context->controller->addCSS($this->_path . 'views/css/back.css');
-        }
-    }
+    // public function hookBackOfficeHeader()
+    // {
+    //     if (Tools::getValue('module_name') == $this->name) {
+    //         $this->context->controller->addJS($this->_path . 'views/js/back.js');
+    //         $this->context->controller->addCSS($this->_path . 'views/css/back.css');
+    //     }
+    // }
 
     /**
      * Add the CSS & JavaScript files you want to be added on the FO.
@@ -89,15 +98,14 @@ class Webstrumgallery extends Module
     // registerStyleSheet, registerJavaScript. We will probably include some JS
     // image slider/gallery to render images on FO.
 
-    public function hookHeader()
-    {
-        $this->context->controller->addJS($this->_path . '/views/js/front.js');
-        $this->context->controller->addCSS($this->_path . '/views/css/front.css');
-    }
+    // public function hookHeader()
+    // {
+    //     $this->context->controller->addJS($this->_path . '/views/js/front.js');
+    //     $this->context->controller->addCSS($this->_path . '/views/css/front.css');
+    // }
 
-    public function hookDisplayAdminProductsMainStepLeftColumnBottom()
+    public function hookDisplayAdminProductsMainStepLeftColumnBottom($context)
     {
-
         // TODO:
 
         // Figure out how to reuse main product image gallery twig template.
@@ -106,6 +114,9 @@ class Webstrumgallery extends Module
         // Figure out how to use same thumbnail generation tools as per original product gallery
 
         /* Place your code here. */
+        $id_product = $context['id_product'];
+
+        return $this->get('twig')->render('@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig', ['productId' => $id_product, 'js_translatable' => []]);
     }
 
     public function hookDisplayProductExtraContent()
