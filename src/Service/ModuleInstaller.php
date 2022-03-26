@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace WebstrumGallery\Installer;
+namespace WebstrumGallery\Service;
 
 use Db;
 use Module;

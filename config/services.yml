@@ -1,11 +1,17 @@
 services:
-
-  webstrum_gallery.uploader.image_uploader:
-    class: WebstrumGallery\Uploader\ImageUploader
-
   webstrum_gallery.repository.image_repository:
     class: WebstrumGallery\Repository\ImageRepository
     public: true
-    factory: ['@doctrine.orm.entity_manager', getRepository]
+    factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments:
       - WebstrumGallery\Entity\WebstrumGalleryImage
+
+  webstrum_gallery.service.image_uploader:
+    class: WebstrumGallery\Service\ImageUploader
+    arguments:
+      - "@webstrum_gallery.repository.image_repository"
+
+  WebstrumGallery\Controller\ImageController:
+    class: WebstrumGallery\Controller\ImageController
+    arguments:
+      - "@webstrum_gallery.service.image_uploader"

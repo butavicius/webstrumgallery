@@ -103,7 +103,6 @@ window.webstrumGalleryImagesProduct = (function () {
         "click",
         "#wg-product-images-dropzone .dz-preview",
         function () {
-          console.log(formImagesProduct);
           if (!$(this).attr("data-id")) {
             return;
           }
@@ -140,6 +139,7 @@ window.webstrumGalleryImagesProduct = (function () {
         success(file, response) {
           // manage error on uploaded file
           if (response.error !== 0) {
+            console.log("erorz");
             errorElem.append(
               $("<p></p>").text(`${file.name}: ${response.error}`)
             );
@@ -147,6 +147,7 @@ window.webstrumGalleryImagesProduct = (function () {
             return;
           }
 
+          console.log("nera erorzo");
           // define id image to file preview
           $(file.previewElement).attr("data-id", response.id);
           $(file.previewElement).attr("url-update", response.url_update);

@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-use WebstrumGallery\Installer\ModuleInstaller;
+use WebstrumGallery\Service\ModuleInstaller;
 
 if (!defined('_PS_VERSION_')) {
     exit;

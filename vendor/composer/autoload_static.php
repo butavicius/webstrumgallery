@@ -16,9 +16,8 @@ class ComposerStaticInitac6651c588ec7345df6936a43874c407
     public static $prefixLengthsPsr4 = array (
         'W' => 
         array (
-            'WebstrumGallery\\Uploader\\' => 25,
+            'WebstrumGallery\\Service\\' => 24,
             'WebstrumGallery\\Repository\\' => 27,
-            'WebstrumGallery\\Installer\\' => 26,
             'WebstrumGallery\\Entity\\' => 23,
             'WebstrumGallery\\Controller\\' => 27,
         ),
@@ -40,17 +39,13 @@ class ComposerStaticInitac6651c588ec7345df6936a43874c407
     );
 
     public static $prefixDirsPsr4 = array (
-        'WebstrumGallery\\Uploader\\' => 
+        'WebstrumGallery\\Service\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src/Uploader',
+            0 => __DIR__ . '/../..' . '/src/Service',
         ),
         'WebstrumGallery\\Repository\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/Repository',
-        ),
-        'WebstrumGallery\\Installer\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/Installer',
         ),
         'WebstrumGallery\\Entity\\' => 
         array (

@@ -21,48 +21,21 @@
 
 declare(strict_types=1);
 
-namespace WebstrumGallery\Uploader;
+namespace WebstrumGallery\Service;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
-use Ramsey\Uuid\Uuid;
 
-class ImageUploader
+class ImageValidator
 {
-    // TODO: Extract to some config file?
-    private string $galleryPath = _PS_MODULE_DIR_ . 'webstrumgallery/uploads/';
-
-    /**
-     * Upload file to Webstrum Gallery path
-     * 
-     * @return string uploaded image filename including extension
-     */
-    public function upload(UploadedFile $image): string
-    {
-        $filename = Uuid::uuid4()->toString();
-        $extension = $image->guessExtension();
-        $destination = "{$this->galleryPath}{$filename}.{$extension}";
-
-        $this->checkImageIsAllowedForUpload($image);
-
-        if (!\ImageManager::resize($image->getPathname(), $destination)) {
-            throw new ImageOptimizationException(
-                'An error occurred while uploading the image. Check your directory permissions.'
-            );
-        }
-
-        return "{$filename}.{$extension}";
-    }
-
     /**
      * Check if image is allowed to be uploaded.
      *
      * @throws UploadedImageConstraintException
      * @throws MemoryLimitException
      */
-    protected function checkImageIsAllowedForUpload(UploadedFile $image)
+    public function validate(UploadedFile $image)
     {
         // Check that file does not exceed allowed upload size
         $maxFileSize = \Tools::getMaxUploadSize();
