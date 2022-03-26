@@ -25,6 +25,11 @@
  * Don't forget to prefix your containers with your own identifier
  * to avoid any conflicts with others containers.
  */
+
+// TODO: Check if window.Dropzone is available and if not, load it. For now
+// we're relying on prestashop core to load it for us, but their dependencies
+// might change in the future
+
 $(document).ready(() => {
   window.webstrumGalleryImagesProduct.init();
 });

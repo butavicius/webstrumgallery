@@ -39,14 +39,11 @@ class ImageController extends FrameworkBundleAdminController
         $this->imageUploader = $imageUploader;
     }
 
-    public function uploadAction(string $productId, Request $request): JsonResponse
+    public function uploadAction(int $productId, Request $request): JsonResponse
     {
-        // $imageRepository = $this->get('webstrum_gallery.repository.image_repository');
-        // $imageRepository = $this->imageRepository
         $requestImage = $request->files->get('wg-image');
 
-        // Upload image to filesystem
-        $filename = $this->imageUploader->upload($requestImage, $productId);
+        $this->imageUploader->upload($requestImage, $productId);
 
         return $this->json(
             [
