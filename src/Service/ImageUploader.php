@@ -34,10 +34,12 @@ class ImageUploader
     // TODO: Extract to some config file?
     private string $galleryPath = _PS_MODULE_DIR_ . 'webstrumgallery/uploads/';
     private ImageRepository $imageRepository;
+    private ImageValidator $imageValidator;
 
-    public function __construct(ImageRepository $imageRepository)
+    public function __construct(ImageRepository $imageRepository, ImageValidator $imageValidator)
     {
         $this->imageRepository = $imageRepository;
+        $this->imageValidator = $imageValidator;
     }
 
     /**

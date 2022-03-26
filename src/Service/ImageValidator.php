@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 class ImageValidator
 {
     /**
-     * Check if image is allowed to be uploaded.
+     * Checks if image is allowed to be uploaded.
      *
      * @throws UploadedImageConstraintException
      * @throws MemoryLimitException
