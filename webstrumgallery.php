@@ -27,13 +27,18 @@
 
 declare(strict_types=1);
 
+use WebstrumGallery\Install\Installer;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 class WebstrumGallery extends Module
 {
-    protected $config_form = false;
+    private const WEBSTRUM_GALLERY_IMAGE_PATH = '/img/webstrumgallery/';
+    private Installer $installer;
 
     public function __construct()
     {
@@ -50,46 +55,27 @@ class WebstrumGallery extends Module
         $this->description = $this->l('This module will display an additional gallery in product page.');
 
         $this->ps_versions_compliancy = array('min' => '1.7.7.0', 'max' => _PS_VERSION_);
+
+        $this->installer = new Installer($this);
     }
 
-    /**
-     * Don't forget to create update methods if needed:
-     * http://doc.prestashop.com/display/PS16/Enabling+the+Auto-Update
-     */
     public function install()
     {
+        if (!parent::install())
+            return false;
 
-        return parent::install() &&
-            // $this->registerHook('header') &&
-            $this->registerHook('displayBackOfficeHeader') &&
-            $this->registerHook('displayAdminProductsMainStepLeftColumnBottom');
-        // $this->registerHook('displayProductExtraContent');
+        return $this->installer->install($this);
     }
 
-    public function hookDisplayBackOfficeHeader()
+    public function uninstall()
     {
-        $this->context->controller->addJS(
-            $this->_path . 'views/js/back.js'
-        );
+        if (!parent::uninstall())
+            return false;
+
+        return $this->installer->uninstall($this);
     }
 
-    /**
-     * Add the CSS & JavaScript files you want to be loaded in the BO.
-     */
-
-    // TODO: Looks like addJS and addCSS are deprecated. Change to
-    // registerStyleSheet, registerJavaScript. Probably won't need to add
-    // anything to BO header if we manage to reuse primary product image
-    // uploader/gallery components
-
-    // public function hookBackOfficeHeader()
-    // {
-    //     if (Tools::getValue('module_name') == $this->name) {
-    //         $this->context->controller->addJS($this->_path . 'views/js/back.js');
-    //         $this->context->controller->addCSS($this->_path . 'views/css/back.css');
-    //     }
-    // }
-
+    // TODO:
     /**
      * Add the CSS & JavaScript files you want to be added on the FO.
      */
@@ -108,22 +94,10 @@ class WebstrumGallery extends Module
     {
         // TODO:
 
-        // Figure out how to reuse main product image gallery twig template.
         // Instead of uploading to /img/p as product normally does, upload to /modules/webstrumgallery/img/{productId}/{imgId}
-
         // Figure out how to use same thumbnail generation tools as per original product gallery
 
-        /* Place your code here. */
-        $id_product = $context['id_product'];
-
-        return $this->get('twig')->render('@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig', ['productId' => $id_product, 'js_translatable' => []]);
-    }
-
-    public function hookDisplayProductExtraContent()
-    {
-        // TODO:
-        // Will need to create ProductExtraContent instance.
-        // see displayProductExtraContent https://devdocs.prestashop.com/1.7/modules/concepts/hooks/list-of-hooks/
-        /* Place your code here. */
+        $productId = $context['id_product'];
+        return $this->get('twig')->render('@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig', ['productId' => $productId, 'images' => [], 'editable' => true]);
     }
 }

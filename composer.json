@@ -1,0 +1,19 @@
+{
+    "name": "butavicius/webstrumgallery",
+    "description": "Additional product gallery for PrestaShop.",
+    "autoload": {
+        "psr-4": {
+            "WebstrumGallery\\Controller\\": "src/Controller/",
+            "WebstrumGallery\\Install\\": "src/Install/",
+            "WebstrumGallery\\Entity\\": "stc/Entity/",
+            "WebstrumGallery\\Repository\\": "stc/Repository/"
+        }
+    },
+    "config": {
+        "prepend-autoloader": false
+    },
+    "type": "prestashop-module",
+    "require": {
+        "ramsey/uuid": "^4.2"
+    }
+}

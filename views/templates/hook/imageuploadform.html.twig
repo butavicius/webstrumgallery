@@ -1,50 +1,54 @@
 <h2>Webstrum gallery</h2>
 <div id="wg-product-images-container" class="mb-4">
-              <div id="wg-product-images-dropzone" class="panel dropzone ui-sortable col-md-12"
-                  url-upload="{{ path('admin_product_wg_image_upload', {'idProduct': productId}) }}"
-                  url-position="{{ path('admin_product_wg_image_positions') }}"
-                  data-max-size="{{ configuration('PS_LIMIT_UPLOAD_IMAGE_VALUE') }}"
-              >
-                <div id="wg-product-images-dropzone-error" class="text-danger"></div>
-                <div class="dz-default dz-message openfilemanager">
-                    <i class="material-icons">add_a_photo</i><br/>
-                   Drop images here<br/>
-                    <a>or select files</a><br/>
-                </div>
-                {% if images is defined %}
-                    {% if editable %}
-                        <div class="dz-preview disabled openfilemanager">
-                            <div><span>+</span></div>
-                        </div>
-                    {% endif %}
-                  {% for image in images %}
-                    <div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle"
-                        data-id="{{ image.id }}"
-                        url-delete="{{ path('admin_product_wg_image_delete', {'idImage': image.id}) }}"
-                        url-update="{{ path('admin_product_wg_image_form', {'idImage': image.id}) }}"
-                    >
-                      <div class="dz-image bg" style="background-image: url('{{ image.base_image_url }}-home_default.{{ image.format }}');"></div>
-                      <div class="dz-details">
-                        <div class="dz-size"><span data-dz-size=""></span></div>
-                        <div class="dz-filename"><span data-dz-name=""></span></div>
-                      </div>
-                      <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress="" style="width: 100%;"></span></div>
-                      <div class="dz-error-message"><span data-dz-errormessage=""></span></div>
-                      <div class="dz-success-mark"></div>
-                      <div class="dz-error-mark"></div>
-                      {% if image.cover %}
-                        <div class="iscover">{{ 'Cover'|trans({}, 'Admin.Catalog.Feature') }}</div>
-                      {% endif %}
-                    </div>
-                  {% endfor %}
-                {% endif %}
-              </div>
-              <div id="wg-product-images-form-container" class="col-md-4">
-                <div id="wg-product-images-form"></div>
-              </div>
-              <div class="dropzone-expander text-sm-center col-md-12">
-                <span class="expand">{{ 'View all images'|trans({}, 'Admin.Catalog.Feature') }}</span>
-                <span class="compress">{{ 'View less'|trans({}, 'Admin.Catalog.Feature') }}</span>
-              </div>
+	<div id="wg-product-images-dropzone" class="panel dropzone ui-sortable col-md-12" url-upload="{{ path('admin_product_wg_image_upload', {'productId': productId}) }}" url-position="{{ path('admin_product_wg_image_positions', {'productId': productId}) }}" data-max-size="{{ configuration('PS_LIMIT_UPLOAD_IMAGE_VALUE') }}">
+		<div id="wg-product-images-dropzone-error" class="text-danger"></div>
+		<div class="dz-default dz-message wg-openfilemanager">
+			<i class="material-icons">add_a_photo</i><br/>
+			Drop images here<br/>
+			<a>or select files</a><br/>
+		</div>
+		{% if images is defined %}
+			{% if editable %}
+				<div class="dz-preview disabled wg-openfilemanager">
+					<div>
+						<span>+</span>
+					</div>
+				</div>
+			{% endif %}
+			{% for image in images %}
+				<div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle" data-id="{{ image.id }}" url-delete="{{ path('admin_product_wg_image_delete', {'idImage': image.id}) }}" url-update="{{ path('admin_product_wg_image_form', {'idImage': image.id}) }}">
+					<div class="dz-image bg" style="background-image: url('{{ image.base_image_url }}-home_default.{{ image.format }}');"></div>
+					<div class="dz-details">
+						<div class="dz-size">
+							<span data-dz-size=""></span>
+						</div>
+						<div class="dz-filename">
+							<span data-dz-name=""></span>
+						</div>
+					</div>
+					<div class="dz-progress">
+						<span class="dz-upload" data-dz-uploadprogress="" style="width: 100%;"></span>
+					</div>
+					<div class="dz-error-message">
+						<span data-dz-errormessage=""></span>
+					</div>
+					<div class="dz-success-mark"></div>
+					<div class="dz-error-mark"></div>
+					{% if image.cover %}
+						<div class="iscover">{{ 'Cover'|trans({}, 'Admin.Catalog.Feature') }}</div>
+					{% endif %}
+				</div>
+			{% endfor %}
+		{% endif %}
+	</div>
+	<div id="wg-product-images-form-container" class="col-md-4">
+		<div id="wg-product-images-form"></div>
+	</div>
+	<div class="dropzone-expander text-sm-center col-md-12">
+		<span class="expand">{{ 'View all images'|trans({}, 'Admin.Catalog.Feature') }}</span>
+		<span class="compress">{{ 'View less'|trans({}, 'Admin.Catalog.Feature') }}</span>
+	</div>
 
-            </div>
+</div>
+
+<script type="text/javascript" src="/modules/webstrumgallery/views/js/back.js"></script>

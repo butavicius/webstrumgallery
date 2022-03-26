@@ -1,0 +1,10 @@
+admin_product_wg_image_upload:
+    path: webstrumgallery/upload/{productId}
+    methods: [GET, POST]
+    defaults:
+      _controller: 'WebstrumGallery\Controller\ImageController::uploadAction'
+admin_product_wg_image_positions:
+    path: webstrumgallery/positions/{productId}
+    methods: [GET, POST]
+    defaults:
+      _controller: 'WebstrumGallery\Controller\ImageController::updatePositionsAction'
