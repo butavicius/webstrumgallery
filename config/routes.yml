@@ -1,8 +1,14 @@
 admin_product_wg_image_upload:
     path: webstrumgallery/upload/{productId}
-    methods: [GET, POST]
+    methods: [POST]
     defaults:
       _controller: 'WebstrumGallery\Controller\ImageController::uploadAction'
+admin_product_wg_image_delete:
+    path: webstrumgallery/delete/{imageId}
+    methods: [POST]
+    defaults:
+      _controller: 'WebstrumGallery\Controller\ImageController::deleteAction'
+
 admin_product_wg_image_positions:
     path: webstrumgallery/positions/{productId}
     methods: [GET, POST]

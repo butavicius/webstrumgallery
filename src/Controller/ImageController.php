@@ -53,4 +53,12 @@ class ImageController extends FrameworkBundleAdminController
             return $this->json(['error' => 1, 'message' => $th->getMessage()]);
         }
     }
+
+    /**
+     * Deletes image
+     */
+    public function deleteImage($productId): JsonResponse
+    {
+        return $this->json(['status' => 'success', 'productId' => $productId]);
+    }
 }

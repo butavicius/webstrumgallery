@@ -16,8 +16,8 @@
 				</div>
 			{% endif %}
 			{% for image in images %}
-				<div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle" data-id="{{ image.id }}" url-delete="{{ path('admin_product_wg_image_delete', {'idImage': image.id}) }}" url-update="{{ path('admin_product_wg_image_form', {'idImage': image.id}) }}">
-					<div class="dz-image bg" style="background-image: url('{{ image.base_image_url }}-home_default.{{ image.format }}');"></div>
+				<div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle" data-id="{{ image.id }}" url-delete="{{ path('admin_product_wg_image_delete', {'imageId': image.id}) }}" url-update="none">
+					<div class="dz-image bg" style="background-image: url('{{ image.url }}');"></div>
 					<div class="dz-details">
 						<div class="dz-size">
 							<span data-dz-size=""></span>
@@ -34,9 +34,6 @@
 					</div>
 					<div class="dz-success-mark"></div>
 					<div class="dz-error-mark"></div>
-					{% if image.cover %}
-						<div class="iscover">{{ 'Cover'|trans({}, 'Admin.Catalog.Feature') }}</div>
-					{% endif %}
 				</div>
 			{% endfor %}
 		{% endif %}

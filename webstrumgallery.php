@@ -27,6 +27,7 @@
 
 declare(strict_types=1);
 
+use WebstrumGallery\Repository\ImageRepository;
 use WebstrumGallery\Service\ModuleInstaller;
 
 if (!defined('_PS_VERSION_')) {
@@ -91,12 +92,26 @@ class WebstrumGallery extends Module
 
     public function hookDisplayAdminProductsMainStepLeftColumnBottom($context)
     {
+        /**@var ImageRepository $repository */
+        $repository = $this->get('webstrum_gallery.repository.image_repository');
+        $productId = $context['id_product'];
+
+        $records = $repository->findByProductId($productId);
+
+        $mapFunc = function (object $record) {
+            return [
+                'url' => _MODULE_DIR_ . "webstrumgallery/uploads/" . $record->getFilename(),
+                'id' => $record->getId()
+            ];
+        };
+        $images = array_map($mapFunc, $records);
+
+        dump($images);
         // TODO:
 
         // Instead of uploading to /img/p as product normally does, upload to /modules/webstrumgallery/img/{productId}/{imgId}
         // Figure out how to use same thumbnail generation tools as per original product gallery
 
-        $productId = $context['id_product'];
-        return $this->get('twig')->render('@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig', ['productId' => $productId, 'images' => [], 'editable' => true]);
+        return $this->get('twig')->render('@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig', ['productId' => $productId, 'images' => $images, 'editable' => true]);
     }
 }
