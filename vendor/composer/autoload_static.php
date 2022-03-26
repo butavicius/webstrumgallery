@@ -17,7 +17,7 @@ class ComposerStaticInitac6651c588ec7345df6936a43874c407
         'W' => 
         array (
             'WebstrumGallery\\Repository\\' => 27,
-            'WebstrumGallery\\Install\\' => 24,
+            'WebstrumGallery\\Installer\\' => 26,
             'WebstrumGallery\\Entity\\' => 23,
             'WebstrumGallery\\Controller\\' => 27,
         ),
@@ -43,9 +43,9 @@ class ComposerStaticInitac6651c588ec7345df6936a43874c407
         array (
             0 => __DIR__ . '/../..' . '/stc/Repository',
         ),
-        'WebstrumGallery\\Install\\' => 
+        'WebstrumGallery\\Installer\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src/Install',
+            0 => __DIR__ . '/../..' . '/src/Installer',
         ),
         'WebstrumGallery\\Entity\\' => 
         array (

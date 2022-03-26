@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'WebstrumGallery\\Repository\\' => array($baseDir . '/stc/Repository'),
-    'WebstrumGallery\\Install\\' => array($baseDir . '/src/Install'),
+    'WebstrumGallery\\Installer\\' => array($baseDir . '/src/Installer'),
     'WebstrumGallery\\Entity\\' => array($baseDir . '/stc/Entity'),
     'WebstrumGallery\\Controller\\' => array($baseDir . '/src/Controller'),
     'Symfony\\Polyfill\\Php81\\' => array($vendorDir . '/symfony/polyfill-php81'),

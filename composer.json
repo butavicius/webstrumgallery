@@ -4,7 +4,7 @@
     "autoload": {
         "psr-4": {
             "WebstrumGallery\\Controller\\": "src/Controller/",
-            "WebstrumGallery\\Install\\": "src/Install/",
+            "WebstrumGallery\\Installer\\": "src/Installer/",
             "WebstrumGallery\\Entity\\": "stc/Entity/",
             "WebstrumGallery\\Repository\\": "stc/Repository/"
         }
