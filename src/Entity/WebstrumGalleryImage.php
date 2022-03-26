@@ -24,13 +24,12 @@ declare(strict_types=1);
 namespace WebstrumGallery\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="WebstrumGallery\Repository\ImageRepository")
  */
-class Image
+class WebstrumGalleryImage
 {
     /**
      * @ORM\Id
@@ -47,7 +46,7 @@ class Image
     /**
      * @ORM\Column(name="filename", type="string")
      */
-    private Uuid $filename;
+    private string $filename;
 
     public function getId(): int
     {
@@ -69,12 +68,12 @@ class Image
         $this->productId = $id;
     }
 
-    public function getFilename(): Uuid
+    public function getFilename(): string
     {
         return $this->filename;
     }
 
-    public function setFilename(Uuid $filename): void
+    public function setFilename(string $filename): void
     {
         $this->filename = $filename;
     }

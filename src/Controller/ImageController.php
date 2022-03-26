@@ -23,12 +23,38 @@ declare(strict_types=1);
 
 namespace WebstrumGallery\Controller;
 
+use WebstrumGallery\Uploader\ImageUploader;
+use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use WebstrumGallery\Repository\ImageRepository;
 
 class ImageController extends FrameworkBundleAdminController
 {
-    public function uploadAction(string $productId)
+    public function uploadAction(string $productId, Request $request): JsonResponse
     {
-        return $this->json(['test' => 'valuekas', 'productId' => $productId]);
+        // TODO: Configure Symfony DI for ImageUploader
+        $imageUploader = new ImageUploader();
+
+        /** @var ImageRepository $imageRepository */
+        $imageRepository = $this->get(
+            'webstrum_gallery.repository.image_repository'
+        );
+
+        $requestImage = $request->files->get('wg-image');
+
+        // Upload image to filesystem
+        $filename = $imageUploader->upload($requestImage);
+
+        // Insert image info to database
+        // TODO: Can you change var type in controller signature?
+        $imageRepository->insert((int) $productId, $filename);
+
+        return $this->json(
+            [
+                'productId' => $productId,
+                'filename' => $filename
+            ]
+        );
     }
 }

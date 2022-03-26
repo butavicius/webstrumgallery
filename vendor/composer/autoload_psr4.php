@@ -6,9 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'WebstrumGallery\\Repository\\' => array($baseDir . '/stc/Repository'),
+    'WebstrumGallery\\Uploader\\' => array($baseDir . '/src/Uploader'),
+    'WebstrumGallery\\Repository\\' => array($baseDir . '/src/Repository'),
     'WebstrumGallery\\Installer\\' => array($baseDir . '/src/Installer'),
-    'WebstrumGallery\\Entity\\' => array($baseDir . '/stc/Entity'),
+    'WebstrumGallery\\Entity\\' => array($baseDir . '/src/Entity'),
     'WebstrumGallery\\Controller\\' => array($baseDir . '/src/Controller'),
     'Symfony\\Polyfill\\Php81\\' => array($vendorDir . '/symfony/polyfill-php81'),
     'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),

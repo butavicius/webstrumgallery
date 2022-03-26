@@ -26,7 +26,7 @@ namespace WebstrumGallery\Installer;
 use Db;
 use Module;
 
-class Installer
+class ModuleInstaller
 {
     /**
      * Install module.
@@ -71,7 +71,7 @@ class Installer
         // TODO: Specify FK for product so records get deleted when product is deleted?
 
         $queries = [
-            'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'webstrumgallery_image` (
+            'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'webstrum_gallery_image` (
               `id_wg_image` int(11) NOT NULL AUTO_INCREMENT,
               `id_product` int(11) NOT NULL,
               `filename` varchar(64) NOT NULL,
@@ -92,7 +92,7 @@ class Installer
         // TODO: Delete table for storing gallery image order.
 
         $queries = [
-            'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'webstrumgallery_image`;',
+            'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'webstrum_gallery_image`;',
         ];
 
         return $this->executeQueries($queries);

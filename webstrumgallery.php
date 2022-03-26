@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-use WebstrumGallery\Installer\Installer;
+use WebstrumGallery\Installer\ModuleInstaller;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -37,8 +37,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 class WebstrumGallery extends Module
 {
-    private const WEBSTRUM_GALLERY_IMAGE_PATH = '/img/webstrumgallery/';
-    private Installer $installer;
+    private ModuleInstaller $installer;
 
     public function __construct()
     {
@@ -56,7 +55,7 @@ class WebstrumGallery extends Module
 
         $this->ps_versions_compliancy = array('min' => '1.7.7.0', 'max' => _PS_VERSION_);
 
-        $this->installer = new Installer($this);
+        $this->installer = new ModuleInstaller($this);
     }
 
     public function install()

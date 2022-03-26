@@ -5,8 +5,9 @@
         "psr-4": {
             "WebstrumGallery\\Controller\\": "src/Controller/",
             "WebstrumGallery\\Installer\\": "src/Installer/",
-            "WebstrumGallery\\Entity\\": "stc/Entity/",
-            "WebstrumGallery\\Repository\\": "stc/Repository/"
+            "WebstrumGallery\\Entity\\": "src/Entity/",
+            "WebstrumGallery\\Repository\\": "src/Repository/",
+            "WebstrumGallery\\Uploader\\": "src/Uploader"
         }
     },
     "config": {

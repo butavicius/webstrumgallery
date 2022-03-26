@@ -24,15 +24,13 @@ declare(strict_types=1);
 namespace WebstrumGallery\Repository;
 
 use Doctrine\Orm\EntityRepository;
-use WebstrumGallery\Entity\Image;
-use Ramsey\Uuid\Uuid;
+use WebstrumGallery\Entity\WebstrumGalleryImage;
 
 class ImageRepository extends EntityRepository
 {
-    public function insert(int $productId): void
+    public function insert(int $productId, string $filename): void
     {
-        $image = new Image();
-        $filename = Uuid::uuid4();
+        $image = new WebstrumGalleryImage();
 
         $image->setProductId($productId);
         $image->setFilename($filename);
@@ -42,7 +40,7 @@ class ImageRepository extends EntityRepository
         $em->flush();
     }
 
-    public function delete(Image $image): void
+    public function delete(WebstrumGalleryImage $image): void
     {
         $em = $this->getEntityManager();
         if ($image) {
