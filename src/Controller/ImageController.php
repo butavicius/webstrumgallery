@@ -27,7 +27,6 @@ use WebstrumGallery\Service\ImageUploader;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use WebstrumGallery\Repository\ImageRepository;
 
 class ImageController extends FrameworkBundleAdminController
 {
@@ -39,16 +38,19 @@ class ImageController extends FrameworkBundleAdminController
         $this->imageUploader = $imageUploader;
     }
 
+    /**
+     * Uploads image to gallery
+     */
     public function uploadAction(int $productId, Request $request): JsonResponse
     {
         $requestImage = $request->files->get('wg-image');
 
-        $this->imageUploader->upload($requestImage, $productId);
+        try {
+            $this->imageUploader->upload($requestImage, $productId);
 
-        return $this->json(
-            [
-                'error' => 0,
-            ]
-        );
+            return $this->json(['error' => 0]);
+        } catch (\Throwable $th) {
+            return $this->json(['error' => 1, 'message' => $th->getMessage()]);
+        }
     }
 }

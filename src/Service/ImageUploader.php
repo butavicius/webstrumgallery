@@ -45,13 +45,10 @@ class ImageUploader
     /**
      * Uploads file to Webstrum Gallery.
      */
-    public function upload(UploadedFile $image, int $productId)
+    public function upload(UploadedFile $image, int $productId): void
     {
-        $validator = new ImageValidator();
-        $validator->validate($image);
+        $this->imageValidator->validate($image);
         $filename = $this->saveToFileSystem($image);
-
-        // TODO: Can you change var type in controller signature?
         $this->saveToDatabase($filename, $productId);
     }
 
