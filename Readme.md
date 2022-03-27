@@ -16,12 +16,17 @@ git clone https://github.com/butavicius/webstrumgallery.git;
 
 ## Features:
 * Slider-type gallery. You can click on arrows or swipe through images.
-* Upload images in back office product page.
 * Drag-and-drop uploaded images around to reorder them.
+* Customizable style.
+
+## Usage:
+
+### Upload and arrange images in Back Office product page:
 
 <img src="screenshots/backend.png" height="400px" />
 
-### Configure module to suit your style:
+### Configure gallery to suit your theme:
+In Back Office->Modules->Module manager, search for "Webstrum Gallery" and click "Configure".
 * Change Gallery's title. 
 * Pick gallery background color.
 * Choose style - sharp or round gallery element corners. 
