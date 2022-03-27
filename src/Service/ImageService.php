@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 
 class ImageService
 {
-    // TODO: Extract to some config file?
+    // TODO: Extract path constant to some config file
     private string $galleryPath = _PS_MODULE_DIR_ . 'webstrumgallery/uploads/';
     private ImageRepository $imageRepository;
     private Filesystem $filesystem;
@@ -102,7 +102,7 @@ class ImageService
             return $a['position'] - $b['position'];
         });
 
-        // TODO: Use DTOs
+        // TODO: Consider using DTOs
         // TODO: Extract mapping logic to separate function
         return $mappedImages;
     }
@@ -113,7 +113,7 @@ class ImageService
      * @return string saved filename with extension 
      * @throws ImageOptimizationException
      */
-    private function saveToFileSystem(UploadedFile $image)
+    private function saveToFileSystem(UploadedFile $image): string
     {
         $temporaryLocation = $image->getPathname();
         $extension = $image->guessExtension();

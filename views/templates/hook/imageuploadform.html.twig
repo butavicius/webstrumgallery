@@ -26,20 +26,15 @@
 <h2>Webstrum gallery</h2>
 <div id="wg-product-images-container" class="mb-4">
 	<div id="wg-product-images-dropzone" class="panel dropzone col-md-12" url-upload="{{ path('admin_product_wg_image_upload', {'productId': productId}) }}" url-position="{{ path('admin_product_wg_image_positions', {'productId': productId}) }}" data-max-size="{{ configuration('PS_LIMIT_UPLOAD_IMAGE_VALUE') }}">
-		<div class="dz-default dz-message wg-openfilemanager">
-			<i class="material-icons">add_a_photo</i><br/>
-			Drop images here<br/>
-			<a>or select files</a><br/>
-		</div>
 		{% if images is defined %}
-				<div class="dz-preview disabled wg-openfilemanager">
-					<div class="dz-image" style="background-color: gold; display: flex; justify-content: center; align-items: center; overflow: hidden">
-						<span style="font-size: 5rem; cursor: pointer">+</span>
+				<div class="dz-preview dz-button disabled wg-openfilemanager">
+					<div class="dz-image" style="display: flex; justify-content: center; align-items: center; overflow: hidden">
+						<span style="font-size: 3rem; cursor: pointer; padding: 2rem;">+</span>
 					</div>
 				</div>
 			{% for image in images %}
 				<div class="dz-preview dz-image-preview ui-sortable-handle dz-complete" data-id="{{ image.id }}" url-delete="{{ path('admin_product_wg_image_delete', {'imageId': image.id})}}" style="z-index: 1; position: relative; opacity: 1; left: 0px; top: 0px;">
-					<div class="dz-image"><img data-dz-thumbnail="" alt="" src="{{ image.url }}"></div>
+					<div class="dz-image"><img data-dz-thumbnail="" alt="" src="{{ image.url }}" ></div>
 					<a class="dz-remove" href="javascript:undefined;" data-dz-remove="{{ image.id }}">Delete</a>
 				</div>
 			{% endfor %}

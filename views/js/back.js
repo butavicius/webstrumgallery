@@ -39,15 +39,6 @@ $(document).ready(() => {
 window.webstrumGalleryImagesProduct = (function () {
   const dropZoneElem = $("#wg-product-images-dropzone");
 
-  function checkDropzoneMode() {
-    if (!dropZoneElem.find(".dz-preview:not(.openfilemanager)").length) {
-      dropZoneElem.removeClass("dz-started");
-      dropZoneElem.find(".dz-preview.openfilemanager").hide();
-    } else {
-      dropZoneElem.find(".dz-preview.openfilemanager").show();
-    }
-  }
-
   return {
     init() {
       Dropzone.autoDiscover = false;
@@ -67,18 +58,16 @@ window.webstrumGalleryImagesProduct = (function () {
         dictFileTooBig: translate_javascripts.ToLargeFile,
         dictCancelUpload: translate_javascripts.Delete,
         sending() {
-          checkDropzoneMode();
           errorElem.html("");
         },
         queuecomplete() {
-          checkDropzoneMode();
           dropZoneElem.sortable("enable");
-          imagesProduct.updateExpander();
         },
         processing() {
           dropZoneElem.sortable("disable");
         },
         success(file, response) {
+          // TODO: Figure out where to display error
           // manage error on uploaded file
           if (response.error !== 0) {
             errorElem.append(
@@ -90,7 +79,6 @@ window.webstrumGalleryImagesProduct = (function () {
 
           // define id image to file preview
           $(file.previewElement).attr("data-id", response.id);
-          // $(file.previewElement).addClass("ui-sortable-handle");
 
           // Attach delete handler to "delete" text element
           $(file.previewElement)
@@ -102,6 +90,9 @@ window.webstrumGalleryImagesProduct = (function () {
                 url: response.url_delete,
               });
             });
+
+          // remove unnecessary details
+          $(file.previewElement).find(".dz-details").first().remove();
         },
         error(file, response) {
           let message = "";
@@ -127,12 +118,8 @@ window.webstrumGalleryImagesProduct = (function () {
           this.removeFile(file);
         },
         init() {
-          // if already images uploaded, mask drop file message
-          if (dropZoneElem.find(".dz-preview:not(.openfilemanager)").length) {
-            dropZoneElem.addClass("dz-started");
-          } else {
-            dropZoneElem.find(".dz-preview.openfilemanager").hide();
-          }
+          // remove initial "drop files here message"
+          dropZoneElem.find(".dz-message").remove();
 
           // Attach delete handlers to images
           dropZoneElem.find(".dz-image-preview").each((index, imageElement) => {
@@ -198,18 +185,6 @@ window.webstrumGalleryImagesProduct = (function () {
       };
 
       dropZoneElem.dropzone(jQuery.extend(dropzoneOptions));
-    },
-    checkDropzoneMode() {
-      checkDropzoneMode();
-    },
-    getOlderImageId() {
-      // eslint-disable-next-line
-      return Math.min.apply(
-        Math,
-        $(".dz-preview").map(function () {
-          return $(this).data("id");
-        })
-      );
     },
   };
 })();

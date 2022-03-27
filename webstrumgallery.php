@@ -83,14 +83,13 @@ class WebstrumGallery extends Module
     }
 
     /**
-     * Displays image upload form template in BO
+     * Displays image upload form in Back Office
      */
     public function hookDisplayAdminProductsMainStepLeftColumnBottom($context)
     {
         $productId = $context['id_product'];
         $images = $this->imageService->getProductImages((int) $productId);
 
-        dump($images);
 
         return $this
             ->get('twig')
@@ -98,7 +97,7 @@ class WebstrumGallery extends Module
     }
 
     /**
-     * Displays image gallery template in FO
+     * Displays image gallery in Front Office
      */
     public function hookDisplayFooterProduct($context)
     {
@@ -110,12 +109,21 @@ class WebstrumGallery extends Module
     }
 
     /**
+     * Registers CSS for Back Office
+     */
+    public function hookDisplayBackOfficeHeader()
+    {
+        $this->context->controller->addCSS($this->_path . 'views/css/back.css');
+    }
+
+    /**
      * Registers CSS and JS for front office
      */
-    public function hookActionFrontControllerSetMedia() {
+    public function hookActionFrontControllerSetMedia()
+    {
         $this->context->controller->registerStylesheet(
-            'webstrum-gallery-style',
-            $this->_path.'views/css/splide.min.css',
+            'webstrum-gallery-splide-css',
+            $this->_path . 'views/css/splide.min.css',
             [
                 'media' => 'all',
                 'priority' => 1000,
@@ -123,8 +131,8 @@ class WebstrumGallery extends Module
         );
 
         $this->context->controller->registerJavascript(
-            'webstrum-gallery-splide',
-            $this->_path.'views/js/splide.min.js',
+            'webstrum-gallery-splide-js',
+            $this->_path . 'views/js/splide.min.js',
             [
                 'position' => 'bottom',
                 'priority' => 1000,
@@ -132,8 +140,8 @@ class WebstrumGallery extends Module
         );
 
         $this->context->controller->registerJavascript(
-            'webstrum-gallery-front',
-            $this->_path.'views/js/front.js',
+            'webstrum-gallery-front-js',
+            $this->_path . 'views/js/front.js',
             [
                 'position' => 'bottom',
                 'priority' => 999,

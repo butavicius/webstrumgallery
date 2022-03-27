@@ -64,7 +64,7 @@ class ImageController extends FrameworkBundleAdminController
     /**
      * Deletes image from Webstrum Gallery.
      * 
-     * @return string JSON object with property error = 0 on success, 1 on failure
+     * @return JsonResponse with property error = 0 on success, 1 on failure
      */
     public function deleteAction(int $imageId): JsonResponse
     {
@@ -83,6 +83,8 @@ class ImageController extends FrameworkBundleAdminController
 
     /**
      * Updates image positions in Webstrum Gallery.
+     * 
+     * @return JsonResponse with property error = 0 on success, 1 on failure
      */
     public function updatePositionsAction(int $productId, Request $request): JsonResponse
     {
