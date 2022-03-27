@@ -30,6 +30,8 @@
 // we're relying on prestashop core to load it for us, but their dependencies
 // might change in the future
 
+// TODO: Refactor this mess
+
 $(document).ready(() => {
   window.webstrumGalleryImagesProduct.init();
 });
@@ -134,7 +136,6 @@ window.webstrumGalleryImagesProduct = (function () {
 
           // Attach delete handlers to images
           dropZoneElem.find(".dz-image-preview").each((index, imageElement) => {
-            const imageId = $(imageElement).attr("data-id");
             const removeElement = $(imageElement).find(".dz-remove").first();
 
             removeElement.on("click", () => {
@@ -212,129 +213,3 @@ window.webstrumGalleryImagesProduct = (function () {
     },
   };
 })();
-
-// window.webstrumGalleryFormImagesProduct = (function () {
-//   const dropZoneElem = $("#wg-product-images-dropzone");
-//   const formZoneElem = $("#wg-product-images-form-container");
-
-//   // default state
-//   formZoneElem.hide();
-
-//   formZoneElem.magnificPopup({
-//     delegate: "a.open-image",
-//     type: "image",
-//   });
-
-//   function toggleColDropzone(enlarge) {
-//     const smallCol = "col-md-8";
-//     const largeCol = "col-md-12";
-
-//     if (enlarge === true) {
-//       dropZoneElem.removeClass(smallCol).addClass(largeCol);
-//     } else {
-//       dropZoneElem.removeClass(largeCol).addClass(smallCol);
-//     }
-//   }
-
-//   return {
-//     form(id) {
-//       dropZoneElem.find(".dz-preview.active").removeClass("active");
-//       dropZoneElem.find(`.dz-preview[data-id='${id}']`).addClass("active");
-//       if (!imagesProduct.shouldDisplayExpander()) {
-//         dropZoneElem.css("height", "auto");
-//       }
-//       $.ajax({
-//         url: dropZoneElem
-//           .find(`.dz-preview[data-id='${id}']`)
-//           .attr("url-update"),
-//         success(response) {
-//           formZoneElem.find("#wg-product-images-form").html(response);
-//           form.switchLanguage($("#wg-form_switch_language").val());
-//         },
-//         complete() {
-//           toggleColDropzone(false);
-//           formZoneElem.show();
-//           dropZoneElem.addClass("d-none d-md-block");
-//         },
-//       });
-//     },
-//     send(id) {
-//       $.ajax({
-//         type: "POST",
-//         url: dropZoneElem
-//           .find(`.dz-preview[data-id='${id}']`)
-//           .attr("url-update"),
-//         data: formZoneElem.find("textarea, input").serialize(),
-//         beforeSend() {
-//           formZoneElem.find(".actions button").prop("disabled", "disabled");
-//           formZoneElem.find("ul.text-danger").remove();
-//           formZoneElem.find("*.has-danger").removeClass("has-danger");
-//         },
-//         success() {
-//           if (formZoneElem.find("#wg-form_image_cover:checked").length) {
-//             imagesProduct.updateDisplayCover(id);
-//           }
-//         },
-//         error(response) {
-//           if (response && response.responseText) {
-//             $.each(jQuery.parseJSON(response.responseText), (key, errors) => {
-//               let html = '<ul class="list-unstyled text-danger">';
-//               $.each(errors, (errorsKey, error) => {
-//                 html += `<li>${error}</li>`;
-//               });
-//               html += "</ul>";
-
-//               $(`#wg-form_image_${key}`).parent().append(html);
-//               $(`#wg-form_image_${key}`).parent().addClass("has-danger");
-//             });
-//           }
-//         },
-//         complete() {
-//           formZoneElem.find(".actions button").removeAttr("disabled");
-//         },
-//       });
-//     },
-//     delete(id) {
-//       modalConfirmation
-//         .create(
-//           translate_javascripts["Are you sure you want to delete this item?"],
-//           null,
-//           {
-//             onContinue() {
-//               $.ajax({
-//                 url: dropZoneElem
-//                   .find(`.dz-preview[data-id="${id}"]`)
-//                   .attr("url-delete"),
-//                 complete() {
-//                   formZoneElem.find(".close").click();
-//                   const wasCover = !!dropZoneElem.find(
-//                     `.dz-preview[data-id="${id}"] .iscover`
-//                   ).length;
-//                   dropZoneElem.find(`.dz-preview[data-id="${id}"]`).remove();
-//                   $(`.images .product-combination-image [value=${id}]`)
-//                     .parent()
-//                     .remove();
-//                   imagesProduct.checkDropzoneMode();
-//                   if (wasCover === true) {
-//                     // The controller will choose the oldest image as the new cover.
-//                     imagesProduct.updateDisplayCover(
-//                       imagesProduct.getOlderImageId()
-//                     );
-//                   }
-//                 },
-//               });
-//             },
-//           }
-//         )
-//         .show();
-//     },
-//     close() {
-//       toggleColDropzone(true);
-//       dropZoneElem.removeClass("d-none d-md-block");
-//       dropZoneElem.css("height", "");
-//       formZoneElem.find("#product-images-form").html("");
-//       formZoneElem.hide();
-//       dropZoneElem.find(".dz-preview.active").removeClass("active");
-//     },
-//   };
-// })();
