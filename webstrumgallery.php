@@ -69,6 +69,7 @@ class WebstrumGallery extends Module
 
         Configuration::updateValue('WEBSTRUMGALLERY_TITLE', 'Webstrum Gallery');
         Configuration::updateValue('WEBSTRUMGALLERY_COLOR', '#ffd700');
+        Configuration::updateValue('WEBSTRUMGALLERY_CORNERS', '0');
 
         return $this->installer->install($this);
     }
@@ -80,6 +81,7 @@ class WebstrumGallery extends Module
 
         Configuration::deleteByName('WEBSTRUMGALLERY_TITLE');
         Configuration::deleteByName('WEBSTRUMGALLERY_COLOR');
+        Configuration::deleteByName('WEBSTRUMGALLERY_CORNERS');
 
         return $this->installer->uninstall($this);
     }
@@ -119,12 +121,14 @@ class WebstrumGallery extends Module
 
         $galleryColor = Configuration::get('WEBSTRUMGALLERY_COLOR');
         $galleryTitle = Configuration::get('WEBSTRUMGALLERY_TITLE');
+        $galleryCorners = Configuration::get('WEBSTRUMGALLERY_CORNERS');
 
         $this->context->smarty->assign(
             [
                 'images' => $images,
                 'galleryColor' => $galleryColor,
-                'galleryTitle' => $galleryTitle
+                'galleryTitle' => $galleryTitle,
+                'galleryCorners' => $galleryCorners,
             ]
         );
 
@@ -185,6 +189,7 @@ class WebstrumGallery extends Module
             // retrieve the value set by the user
             $color = (string) Tools::getValue('WEBSTRUMGALLERY_COLOR');
             $title = (string) Tools::getValue('WEBSTRUMGALLERY_TITLE');
+            $corners = (string) Tools::getValue('WEBSTRUMGALLERY_CORNERS');
 
             // check that the value is valid
             if (empty($title)) {
@@ -194,6 +199,7 @@ class WebstrumGallery extends Module
                 // value is ok, update it and display a confirmation message
                 Configuration::updateValue('WEBSTRUMGALLERY_COLOR', $color);
                 Configuration::updateValue('WEBSTRUMGALLERY_TITLE', $title);
+                Configuration::updateValue('WEBSTRUMGALLERY_CORNERS', $corners);
                 $output = $this->displayConfirmation($this->l('Settings updated'));
             }
         }
@@ -228,6 +234,30 @@ class WebstrumGallery extends Module
                         'class' => 'wg-colorpicker',
                         'required' => true,
                     ],
+                    [
+                        'type' => 'radio',
+                        'label' => $this->l('Gallery corners'),
+                        'label' => $this->l('Do you want the gallery to have rounded or sharp corners?'),
+                        'name' => 'WEBSTRUMGALLERY_CORNERS',
+                        'required' => true,
+                        'values' => [
+                            [
+                                'id' => '0',
+                                'value' => '0',
+                                'label' => $this->l('Sharp'),
+                            ],
+                            [
+                                'id' => '1rem',
+                                'value' => '1rem',
+                                'label' => $this->l('Rounded'),
+                            ],
+                            [
+                                'id' => '2rem',
+                                'value' => '2rem',
+                                'label' => $this->l('Very round'),
+                            ],
+                        ]
+                    ],
                 ],
                 'submit' => [
                     'title' => $this->l('Save'),
@@ -251,6 +281,7 @@ class WebstrumGallery extends Module
         // Load current value into the form
         $helper->fields_value['WEBSTRUMGALLERY_TITLE'] = Tools::getValue('WEBSTRUMGALLERY_TITLE', Configuration::get('WEBSTRUMGALLERY_TITLE'));
         $helper->fields_value['WEBSTRUMGALLERY_COLOR'] = Tools::getValue('WEBSTRUMGALLERY_COLOR', Configuration::get('WEBSTRUMGALLERY_COLOR'));
+        $helper->fields_value['WEBSTRUMGALLERY_CORNERS'] = Tools::getValue('WEBSTRUMGALLERY_CORNERS', Configuration::get('WEBSTRUMGALLERY_CORNERS'));
 
         return $helper->generateForm([$form]);
     }

@@ -26,7 +26,7 @@
 {if count($images) > 0}
     <h2>{$galleryTitle}</h2>
 
-    <div class="webstrum-gallery splide" style="background-color: {$galleryColor}; border-radius: 2rem; margin-top: 1rem">
+    <div class="webstrum-gallery splide" style="background-color: {$galleryColor}; border-radius: {$galleryCorners}; margin-top: 1rem">
         <div class="splide__track">
             <ul class="splide__list">
 
