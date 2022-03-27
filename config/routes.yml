@@ -3,6 +3,7 @@ admin_product_wg_image_upload:
     methods: [POST]
     defaults:
       _controller: 'WebstrumGallery\Controller\ImageController::uploadAction'
+
 admin_product_wg_image_delete:
     path: webstrumgallery/delete/{imageId}
     methods: [DELETE]
