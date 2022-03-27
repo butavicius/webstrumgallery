@@ -73,7 +73,8 @@ class ModuleInstaller
             'displayAdminProductsMainStepLeftColumnBottom',
             'displayFooterProduct',
             'actionFrontControllerSetMedia',
-            'displayBackOfficeHeader'
+            'displayBackOfficeHeader',
+            // 'actionProductDelete'
         ];
 
         return $module->registerHook($hooks);

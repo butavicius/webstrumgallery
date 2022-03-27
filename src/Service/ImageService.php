@@ -53,7 +53,7 @@ class ImageService
     {
         $this->validateFile($image);
 
-        $filename = $this->saveToFileSystem($image);
+        $filename = $this->saveToFileSystem($image, (string) $productId);
         $id = $this->saveToDatabase($filename, $productId);
 
         return $id;
@@ -87,7 +87,7 @@ class ImageService
 
         $mapper = function (WebstrumGalleryImage $image) {
             return [
-                'url' => _MODULE_DIR_ . "webstrumgallery/uploads/" . $image->getFilename(),
+                'url' => _MODULE_DIR_ . "webstrumgallery/uploads/" . $image->getProductId() . "/" . $image->getFilename(),
                 'id' => $image->getId(),
 
                 // If position has not been set yet by reordering images, keep
@@ -114,17 +114,23 @@ class ImageService
      * @return string saved filename with extension 
      * @throws ImageOptimizationException
      */
-    private function saveToFileSystem(UploadedFile $image): string
+    private function saveToFileSystem(UploadedFile $image, string $productId): string
     {
+        $productGalleryDirectory = "{$this->galleryPath}{$productId}";
+
+        if(!$this->filesystem->exists($productGalleryDirectory)) {
+            $this->filesystem->mkdir($productGalleryDirectory, 0755);
+        }
+
         $temporaryLocation = $image->getPathname();
         $extension = $image->guessExtension();
         $newFilename = Uuid::uuid4()->toString();
-        $destination = "{$this->galleryPath}{$newFilename}.{$extension}";
+        $destination = "{$productGalleryDirectory}/{$newFilename}.{$extension}";
 
         // TODO: Refactor to not use legacy ImageManager class (see adapter)
         if (!\ImageManager::resize($temporaryLocation, $destination)) {
             throw new ImageOptimizationException(
-                'An error occurred while uploading the image. Check your directory permissions.'
+                'An error occurred while uploading the image. Check your productGalleryDirectory permissions.'
             );
         }
 
