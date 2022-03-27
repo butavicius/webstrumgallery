@@ -44,10 +44,7 @@ class ModuleInstaller
      */
     public function install(Module $module): bool
     {
-
-
         if (!$this->registerHooks($module))
-
             return false;
 
         if (!$this->installDatabase())
@@ -87,19 +84,19 @@ class ModuleInstaller
      */
     private function installDatabase(): bool
     {
-        // TODO: Specify FK for product so records get deleted when product is deleted?
-
         $queries = [
-            'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'webstrum_gallery_image` (
-              `id_wg_image` int(11) NOT NULL AUTO_INCREMENT,
-              `id_product` int(11) NOT NULL,
-              `filename` varchar(64) NOT NULL,
-              `position` int(11) NOT NULL,
-              PRIMARY KEY (`id_wg_image`)
-            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;',
+            'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'webstrum_gallery_image`
+            (
+                `id_wg_image` int(11) NOT NULL AUTO_INCREMENT,
+                `id_product` int(10) UNSIGNED NOT NULL,
+                `filename` varchar(64) NOT NULL,
+                `position` int(11) NOT NULL,
+                PRIMARY KEY (`id_wg_image`),
+                FOREIGN KEY (`id_product`)
+                  REFERENCES `' . _DB_PREFIX_ . 'product`(`id_product`)
+                  ON DELETE CASCADE
+            )   ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;',
         ];
-
-        // TODO: Create another table for storing gallery image order.
 
         return $this->executeQueries($queries);
     }
@@ -109,8 +106,6 @@ class ModuleInstaller
      */
     private function uninstallDatabase(): bool
     {
-        // TODO: Delete table for storing gallery image order.
-
         $queries = [
             'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'webstrum_gallery_image`;',
         ];
