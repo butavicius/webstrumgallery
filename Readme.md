@@ -2,6 +2,11 @@
 
 This module adds an image gallery (in addition to the main one) on product page. The gallery is displayed on the bottom of product page (the yellow thing :grin:).
 
+## Features:
+* Slider-type gallery. You can click on arrows or swipe through images.
+* Drag-and-drop uploaded images around to reorder them.
+* Customizable style.
+
 <img src="screenshots/frontend.png" height="800px" />
 
 ## Installation:
@@ -12,12 +17,6 @@ git clone https://github.com/butavicius/webstrumgallery.git;
 ```
 2) Go to prestashop Back Office->Modules->Module Catalog, search for "Webstrum Gallery". 
 3) Click "Install".
-
-
-## Features:
-* Slider-type gallery. You can click on arrows or swipe through images.
-* Drag-and-drop uploaded images around to reorder them.
-* Customizable style.
 
 ## Usage:
 
