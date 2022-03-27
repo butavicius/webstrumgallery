@@ -25,9 +25,18 @@ namespace WebstrumGallery\Service;
 
 use Db;
 use Module;
+use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleInstaller
 {
+    private $uploadFolder = _PS_MODULE_DIR_ . "webstrumgallery/uploads";
+    private Filesystem $filesystem;
+
+    public function __construct()
+    {
+        $this->filesystem = new Filesystem();
+    }
+
     /**
      * Install module.
      */
@@ -39,6 +48,8 @@ class ModuleInstaller
         if (!$this->installDatabase())
             return false;
 
+        $this->createUploadDir();
+
         return true;
     }
 
@@ -47,6 +58,8 @@ class ModuleInstaller
      */
     public function uninstall(): bool
     {
+        // TODO: Extract this to some configuration file for single source of truth
+        $this->removeUploadDir();
         return $this->uninstallDatabase();
     }
 
@@ -110,5 +123,22 @@ class ModuleInstaller
         }
 
         return true;
+    }
+
+    // TODO: Refactor error handling
+    /**
+     * Creates upload folder
+     */
+    private function createUploadDir()
+    {
+        $this->filesystem->mkdir($this->uploadFolder);
+    }
+
+    /**
+     * Removes upload folder
+     */
+    private function removeUploadDir()
+    {
+        $this->filesystem->remove($this->uploadFolder);
     }
 }

@@ -56,7 +56,7 @@ class WebstrumGallery extends Module
 
         $this->ps_versions_compliancy = array('min' => '1.7.7.0', 'max' => _PS_VERSION_);
 
-        $this->installer = new ModuleInstaller($this);
+        $this->installer = new ModuleInstaller();
     }
 
     public function install()
@@ -98,6 +98,7 @@ class WebstrumGallery extends Module
 
         $records = $repository->findByProductId($productId);
 
+        // TODO: Do this mapping elsewhere or make repository return already formatted array
         $mapFunc = function (object $record) {
             return [
                 'url' => _MODULE_DIR_ . "webstrumgallery/uploads/" . $record->getFilename(),
@@ -105,12 +106,6 @@ class WebstrumGallery extends Module
             ];
         };
         $images = array_map($mapFunc, $records);
-
-        dump($images);
-        // TODO:
-
-        // Instead of uploading to /img/p as product normally does, upload to /modules/webstrumgallery/img/{productId}/{imgId}
-        // Figure out how to use same thumbnail generation tools as per original product gallery
 
         return $this->get('twig')->render('@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig', ['productId' => $productId, 'images' => $images, 'editable' => true]);
     }

@@ -26,20 +26,24 @@ namespace WebstrumGallery\Service;
 use Ramsey\Uuid\Uuid;
 use WebstrumGallery\Service\ImageValidator;
 use WebstrumGallery\Repository\ImageRepository;
+use WebstrumGallery\Entity\WebstrumGalleryImage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
+use Symfony\Component\Filesystem\Filesystem;
 
-class ImageUploader
+class ImageService
 {
     // TODO: Extract to some config file?
     private string $galleryPath = _PS_MODULE_DIR_ . 'webstrumgallery/uploads/';
     private ImageRepository $imageRepository;
     private ImageValidator $imageValidator;
+    private Filesystem $filesystem;
 
-    public function __construct(ImageRepository $imageRepository, ImageValidator $imageValidator)
+    public function __construct(ImageRepository $imageRepository, ImageValidator $imageValidator, Filesystem $filesystem)
     {
         $this->imageRepository = $imageRepository;
         $this->imageValidator = $imageValidator;
+        $this->filesystem = $filesystem;
     }
 
     /**
@@ -53,13 +57,23 @@ class ImageUploader
         $id = $this->saveToDatabase($filename, $productId);
 
         return $id;
-
     }
 
     /**
-     * Saves uploaded image to disk.
+     * Deletes file from Webstrum Gallery.
+     */
+    public function delete(int $imageId): void
+    {
+        $image = $this->imageRepository->find($imageId);
+
+        $this->deleteFromFileSystem($image);
+        $this->deleteFromDatabase($image);
+    }
+
+    /**
+     * Saves image file to Webstrum Gallery module's upload folder.
      * 
-     * @return string saved filename (UUID) with extension 
+     * @return string saved filename with extension 
      * @throws ImageOptimizationException
      */
     private function saveToFileSystem(UploadedFile $image)
@@ -69,6 +83,7 @@ class ImageUploader
         $newFilename = Uuid::uuid4()->toString();
         $destination = "{$this->galleryPath}{$newFilename}.{$extension}";
 
+        // TODO: Refactor to not use legacy ImageManager class (see adapter)
         if (!\ImageManager::resize($temporaryLocation, $destination)) {
             throw new ImageOptimizationException(
                 'An error occurred while uploading the image. Check your directory permissions.'
@@ -79,12 +94,30 @@ class ImageUploader
     }
 
     /**
-     * Inserts database record for uploaded image.
+     * Deletes image file from Webstrum Gallery module's upload folder.
+     */
+    private function deleteFromFileSystem(WebstrumGalleryImage $image): void
+    {
+        // TODO: Extract this to some configuration file for single source of truth
+        $imagePath = _PS_MODULE_DIR_ . "webstrumgallery/uploads/" . $image->getFilename();
+        $this->filesystem->remove($imagePath);
+    }
+
+    /**
+     * Inserts database record for image.
      */
     private function saveToDatabase(string $filename, int $productId): int
     {
         $insertedImage = $this->imageRepository->insert($productId, $filename);
 
         return $insertedImage->getId();
+    }
+
+    /**
+     * Deletes database record of image.
+     */
+    private function deleteFromDatabase(WebstrumGalleryImage $image): void
+    {
+        $this->imageRepository->delete($image);
     }
 }

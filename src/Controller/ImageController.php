@@ -23,30 +23,32 @@ declare(strict_types=1);
 
 namespace WebstrumGallery\Controller;
 
-use WebstrumGallery\Service\ImageUploader;
+use WebstrumGallery\Service\ImageService;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ImageController extends FrameworkBundleAdminController
 {
-    private ImageUploader $imageUploader;
+    private ImageService $imageService;
 
-    public function __construct(ImageUploader $imageUploader)
+    public function __construct(ImageService $imageService)
     {
         parent::__construct();
-        $this->imageUploader = $imageUploader;
+        $this->imageService = $imageService;
     }
 
     /**
-     * Uploads image to gallery
+     * Uploads image to Webstrum Gallery.
+     * 
+     * @return string JSON object with property error = 0 on success, 1 on failure
      */
     public function uploadAction(int $productId, Request $request): JsonResponse
     {
         $requestImage = $request->files->get('wg-image');
 
         try {
-            $imageId = $this->imageUploader->upload($requestImage, $productId);
+            $imageId = $this->imageService->upload($requestImage, $productId);
 
             return $this->json([
                 'error' => 0,
@@ -60,11 +62,22 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Deletes image
+     * Deletes image from Webstrum Gallery.
+     * 
+     * @return string JSON object with property error = 0 on success, 1 on failure
      */
-    public function deleteAction($imageId): JsonResponse
+    public function deleteAction(int $imageId): JsonResponse
     {
-        //TODO: Rename ImageUploader to ImageService and implement delete method
-        return $this->json(['status' => 'success', 'imageId' => $imageId]);
+        try {
+            $this->imageService->delete($imageId);
+            return $this->json([
+                'error' => 0
+            ]);
+        } catch (\Throwable $th) {
+            return $this->json([
+                'error' => 1,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }

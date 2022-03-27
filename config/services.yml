@@ -9,13 +9,14 @@ services:
   webstrum_gallery.service.image_validator:
     class: WebstrumGallery\Service\ImageValidator
 
-  webstrum_gallery.service.image_uploader:
-    class: WebstrumGallery\Service\ImageUploader
+  webstrum_gallery.service.image_service:
+    class: WebstrumGallery\Service\ImageService
     arguments:
       - "@webstrum_gallery.repository.image_repository"
       - "@webstrum_gallery.service.image_validator"
+      - "@filesystem"
 
   WebstrumGallery\Controller\ImageController:
     class: WebstrumGallery\Controller\ImageController
     arguments:
-      - "@webstrum_gallery.service.image_uploader"
+      - "@webstrum_gallery.service.image_service"
