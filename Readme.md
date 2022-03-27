@@ -36,8 +36,10 @@ In Back Office->Modules->Module manager, search for "Webstrum Gallery" and click
 <img src="screenshots/configuration.png" height="300px" />
 
 ## Dev notes / TODO's:
-* Really needs unit/controller integration tests (PHPUnit).
-* Needs refactoring, see `// TODO:` comments.
+* :fire: Write unit/controller integration tests (PHPUnit).
+* Do some refactoring, see `// TODO:` comments.
+* Make sure module is ready to be translated.
+* Make sure module is ready for multistore.
 * Could use improved PHPDoc documentation
 * Could use checking against and aligning to PrestaShop code standards.
 * Could use static analysis (PHPStan).
