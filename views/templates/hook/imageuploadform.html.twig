@@ -35,7 +35,7 @@
 													<div class="dz-error-mark"></div> 
 												</div> #}
 
-					<div class="dz-preview dz-image-preview ui-sortable-handle dz-complete" style="z-index: 1; position: relative; opacity: 1; left: 0px; top: 0px;"> <div class="dz-image"><img data-dz-thumbnail="" alt="" src="{{ image.url }}"></div>
+					<div class="dz-preview dz-image-preview ui-sortable-handle dz-complete" data-id="{{ image.id }}" style="z-index: 1; position: relative; opacity: 1; left: 0px; top: 0px;"> <div class="dz-image"><img data-dz-thumbnail="" alt="" src="{{ image.url }}"></div>
 					<a class="dz-remove" href="javascript:undefined;" data-dz-remove="">Delete</a>
 				</div>
 			{% endfor %}

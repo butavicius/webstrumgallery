@@ -127,7 +127,6 @@ window.webstrumGalleryImagesProduct = (function () {
           } else {
             dropZoneElem.find(".dz-preview.openfilemanager").hide();
           }
-
           // init sortable
           dropZoneElem.sortable({
             items: "div.dz-preview:not(.disabled)",
