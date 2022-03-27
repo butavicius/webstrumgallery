@@ -88,10 +88,10 @@ class ModuleInstaller
         $queries = [
             'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'webstrum_gallery_image`
             (
-                `id_wg_image` int(11) NOT NULL AUTO_INCREMENT,
+                `id_wg_image` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `id_product` int(10) UNSIGNED NOT NULL,
                 `filename` varchar(64) NOT NULL,
-                `position` int(11) NOT NULL,
+                `position` int(10) UNSIGNED NOT NULL,
                 PRIMARY KEY (`id_wg_image`),
                 FOREIGN KEY (`id_product`)
                   REFERENCES `' . _DB_PREFIX_ . 'product`(`id_product`)

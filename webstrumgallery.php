@@ -47,7 +47,7 @@ class WebstrumGallery extends Module
         $this->author = 'Simas Butavičius';
         $this->need_instance = 0;
         $this->bootstrap = true;
-        $this->confirmUninstall = "This will remove all module images permanently.";
+        $this->confirmUninstall = $this->l('This will remove all module images permanently.');
 
         parent::__construct();
 

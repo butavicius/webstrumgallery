@@ -5,6 +5,7 @@ This PrestaShop module adds an image gallery (in addition to the main one) to th
 ## Features:
 * Slider-type gallery. You can click on arrows or swipe through images.
 * Drag-and-drop uploaded images to reorder them.
+* Responsive design - looks great on big and small screens.
 * Customizable style.
 
 <img src="screenshots/frontend.png" height="800px" />
