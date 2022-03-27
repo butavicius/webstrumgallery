@@ -37,7 +37,7 @@ In Back Office->Modules->Module manager, search for "Webstrum Gallery" and click
 <img src="screenshots/configuration.png" height="300px" />
 
 ## Dev notes / TODO's:
-* :fire: Write unit/controller integration tests (PHPUnit).
+* :fire: Write Unit tests/Controller integration tests (PHPUnit).
 * Do some refactoring, see `// TODO:` comments.
 * Make sure module is ready to be translated.
 * Make sure module is ready for multistore.
