@@ -88,9 +88,7 @@ class ImageController extends FrameworkBundleAdminController
      */
     public function updatePositionsAction(int $productId, Request $request): JsonResponse
     {
-        // We get strange request shape from Dropzone.js library. In the end
-        // $positions is array keys are imageId's and values are image position:
-        // ["imageId" => "position", "imageId2" => "position2"...]
+        // Strange request POST data from Dropzone.js library requires untangling
         $positions = get_object_vars(json_decode($request->request->all()['json']));
 
         try {
