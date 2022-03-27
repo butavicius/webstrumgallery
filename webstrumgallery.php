@@ -48,7 +48,7 @@ class WebstrumGallery extends Module
         $this->version = '1.0.0';
         $this->author = 'Simas Butavičius';
         $this->need_instance = 0;
-        $this->bootstrap = false;
+        $this->bootstrap = true;
         $this->confirmUninstall = "This will remove all module images permanently.";
 
         parent::__construct();
@@ -58,7 +58,7 @@ class WebstrumGallery extends Module
 
         $this->ps_versions_compliancy = array('min' => '1.7.7.0', 'max' => _PS_VERSION_);
 
-        $this->installer = new ModuleInstaller();
+        $this->installer = $this->get('webstrum_gallery.service.module_installer');
         $this->imageService = $this->get('webstrum_gallery.service.image_service');
     }
 
@@ -67,7 +67,8 @@ class WebstrumGallery extends Module
         if (!parent::install())
             return false;
 
-        dump($this->installer);
+        Configuration::updateValue('WEBSTRUMGALLERY_TITLE', 'Webstrum Gallery');
+        Configuration::updateValue('WEBSTRUMGALLERY_COLOR', '#ffd700');
 
         return $this->installer->install($this);
     }
@@ -77,7 +78,8 @@ class WebstrumGallery extends Module
         if (!parent::uninstall())
             return false;
 
-        dump($this->installer);
+        Configuration::deleteByName('WEBSTRUMGALLERY_TITLE');
+        Configuration::deleteByName('WEBSTRUMGALLERY_COLOR');
 
         return $this->installer->uninstall($this);
     }
@@ -90,10 +92,21 @@ class WebstrumGallery extends Module
         $productId = $context['id_product'];
         $images = $this->imageService->getProductImages((int) $productId);
 
+        $galleryColor = Configuration::get('WEBSTRUMGALLERY_COLOR');
+        $galleryTitle = Configuration::get('WEBSTRUMGALLERY_TITLE');
+
 
         return $this
             ->get('twig')
-            ->render('@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig', ['productId' => $productId, 'images' => $images]);
+            ->render(
+                '@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig',
+                [
+                    'productId' => $productId,
+                    'images' => $images,
+                    'galleryColor' => $galleryColor,
+                    'galleryTitle' => $galleryTitle,
+                ]
+            );
     }
 
     /**
@@ -103,7 +116,17 @@ class WebstrumGallery extends Module
     {
         $productId = $context['product']->id;
         $images = $this->imageService->getProductImages($productId);
-        $this->context->smarty->assign(['images' => $images]);
+
+        $galleryColor = Configuration::get('WEBSTRUMGALLERY_COLOR');
+        $galleryTitle = Configuration::get('WEBSTRUMGALLERY_TITLE');
+
+        $this->context->smarty->assign(
+            [
+                'images' => $images,
+                'galleryColor' => $galleryColor,
+                'galleryTitle' => $galleryTitle
+            ]
+        );
 
         return $this->display(__FILE__, 'views/templates/hook/imagegallery.tpl');
     }
@@ -147,5 +170,88 @@ class WebstrumGallery extends Module
                 'priority' => 999,
             ]
         );
+    }
+
+    /**
+     * This method handles the module's configuration page
+     * @return string The page's HTML content 
+     */
+    public function getContent()
+    {
+        $output = '';
+
+        // this part is executed only when the form is submitted
+        if (Tools::isSubmit('submit' . $this->name)) {
+            // retrieve the value set by the user
+            $color = (string) Tools::getValue('WEBSTRUMGALLERY_COLOR');
+            $title = (string) Tools::getValue('WEBSTRUMGALLERY_TITLE');
+
+            // check that the value is valid
+            if (empty($title)) {
+                // invalid value, show an error
+                $output = $this->displayError($this->l('Invalid title. Must not be empty.'));
+            } else {
+                // value is ok, update it and display a confirmation message
+                Configuration::updateValue('WEBSTRUMGALLERY_COLOR', $color);
+                Configuration::updateValue('WEBSTRUMGALLERY_TITLE', $title);
+                $output = $this->displayConfirmation($this->l('Settings updated'));
+            }
+        }
+
+        // display any message, then the form
+        return $output . $this->displayConfigurationForm();
+    }
+
+    /**
+     * Builds the configuration form
+     * @return string HTML code
+     */
+    public function displayConfigurationForm()
+    {
+        // Init Fields form array
+        $form = [
+            'form' => [
+                'legend' => [
+                    'title' => $this->l('Settings'),
+                ],
+                'input' => [
+                    [
+                        'type' => 'text',
+                        'label' => $this->l('Gallery Title'),
+                        'name' => 'WEBSTRUMGALLERY_TITLE',
+                        'required' => true,
+                    ],
+                    [
+                        'type' => 'color',
+                        'label' => $this->l('Gallery Color'),
+                        'name' => 'WEBSTRUMGALLERY_COLOR',
+                        'class' => 'wg-colorpicker',
+                        'required' => true,
+                    ],
+                ],
+                'submit' => [
+                    'title' => $this->l('Save'),
+                    'class' => 'btn btn-default pull-right',
+                ],
+            ],
+        ];
+
+        $helper = new HelperForm();
+
+        // Module, token and currentIndex
+        $helper->table = $this->table;
+        $helper->name_controller = $this->name;
+        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->currentIndex = AdminController::$currentIndex . '&' . http_build_query(['configure' => $this->name]);
+        $helper->submit_action = 'submit' . $this->name;
+
+        // Default language
+        $helper->default_form_language = (int) Configuration::get('PS_LANG_DEFAULT');
+
+        // Load current value into the form
+        $helper->fields_value['WEBSTRUMGALLERY_TITLE'] = Tools::getValue('WEBSTRUMGALLERY_TITLE', Configuration::get('WEBSTRUMGALLERY_TITLE'));
+        $helper->fields_value['WEBSTRUMGALLERY_COLOR'] = Tools::getValue('WEBSTRUMGALLERY_COLOR', Configuration::get('WEBSTRUMGALLERY_COLOR'));
+
+        return $helper->generateForm([$form]);
     }
 }

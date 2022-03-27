@@ -34,7 +34,8 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 
 class ImageService
 {
-    // TODO: Extract path constant to some config file
+    // TODO: Extract path constant to some config file 
+    // (there is duplication in ModuleInstaller class)
     private string $galleryPath = _PS_MODULE_DIR_ . 'webstrumgallery/uploads/';
     private ImageRepository $imageRepository;
     private Filesystem $filesystem;

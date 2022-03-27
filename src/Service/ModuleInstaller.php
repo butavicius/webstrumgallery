@@ -29,6 +29,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleInstaller
 {
+    // TODO: Extract path constant to some config file 
+    // (there is duplication in ImageService class)
     private $uploadFolder = _PS_MODULE_DIR_ . "webstrumgallery/uploads";
     private Filesystem $filesystem;
 
@@ -42,7 +44,10 @@ class ModuleInstaller
      */
     public function install(Module $module): bool
     {
+
+
         if (!$this->registerHooks($module))
+
             return false;
 
         if (!$this->installDatabase())
@@ -58,7 +63,6 @@ class ModuleInstaller
      */
     public function uninstall(): bool
     {
-        // TODO: Extract this to some configuration file for single source of truth
         $this->removeUploadDir();
         return $this->uninstallDatabase();
     }
@@ -128,7 +132,7 @@ class ModuleInstaller
         return true;
     }
 
-    // TODO: Refactor error handling
+    // TODO: Refactor error handling. What if access is denied?
     /**
      * Creates upload folder
      */

@@ -23,17 +23,22 @@
 *  International Registered Trademark & Property of PrestaShop SA
 * *}
 
-<h2>Webstrum gallery</h2>
+{if count($images) > 0}
+    <h2>{$galleryTitle}</h2>
 
-{* // TODO: Extract styles to css file *}
-<div class="webstrum-gallery splide" style="background-color: rgb(245, 220, 82); border-radius: 2rem; margin-top: 1rem">
-    <div class="splide__track">
-        <ul class="splide__list">
-            {foreach $images as $image}
-                <li class="splide__slide" style="padding: 2rem">
-                    <a href="{$image.url}" target="_blank"><img src="{$image.url}" style="height: 400px;width: 100%;object-fit: contain" /></a>
-                </li>
-            {/foreach}
-        </ul>
+    <div class="webstrum-gallery splide" style="background-color: {$galleryColor}; border-radius: 2rem; margin-top: 1rem">
+        <div class="splide__track">
+            <ul class="splide__list">
+
+                {foreach $images as $image}
+                    <li class="splide__slide" style="padding: 2rem">
+                        <a href="{$image.url}" target="_blank">
+                            <img src="{$image.url}" style="height: 400px;width: 100%;object-fit: contain" />
+                        </a>
+                    </li>
+                {/foreach}
+
+            </ul>
+        </div>
     </div>
-</div>
+{/if}

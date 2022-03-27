@@ -23,12 +23,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 * #}
 
-<h2>Webstrum gallery</h2>
+<h2>{{ galleryTitle }}</h2>
 <div id="wg-product-images-container" class="mb-4">
 	<div id="wg-product-images-dropzone" class="panel dropzone col-md-12" url-upload="{{ path('admin_product_wg_image_upload', {'productId': productId}) }}" url-position="{{ path('admin_product_wg_image_positions', {'productId': productId}) }}" data-max-size="{{ configuration('PS_LIMIT_UPLOAD_IMAGE_VALUE') }}">
 		{% if images is defined %}
 				<div class="dz-preview dz-button disabled wg-openfilemanager">
-					<div class="dz-image" style="display: flex; justify-content: center; align-items: center; overflow: hidden">
+					<div class="dz-image" style="display: flex; justify-content: center; align-items: center; overflow: hidden; border-color: {{ galleryColor }}">
 						<span style="font-size: 3rem; cursor: pointer; padding: 2rem;">+</span>
 					</div>
 				</div>
