@@ -39,7 +39,7 @@ class ImageRepository extends EntityRepository
 
         $image->setProductId($productId);
         $image->setFilename($filename);
-
+        
         $em = $this->getEntityManager();
         $em->persist($image);
         $em->flush();
@@ -47,6 +47,9 @@ class ImageRepository extends EntityRepository
         return $image;
     }
 
+    /**
+     * Deletes image from database.
+     */
     public function delete(WebstrumGalleryImage $image): void
     {
         $em = $this->getEntityManager();
@@ -54,5 +57,22 @@ class ImageRepository extends EntityRepository
             $em->remove($image);
             $em->flush();
         }
+    }
+
+    /**
+     * Updates image positions in database.
+     */
+    public function updatePositions(int $productId, $positions): void
+    {
+        $images = $this->findByProductId($productId);
+
+        $em = $this->getEntityManager();
+
+        foreach ($images as $image) {
+            $image->setPosition($positions[$image->getId()]);
+            $em->persist($image);
+        }
+
+        $em->flush();
     }
 }

@@ -84,8 +84,23 @@ class ImageController extends FrameworkBundleAdminController
     /**
      * Updates image positions in Webstrum Gallery.
      */
-    public function updatePositionsAction(int $imageId): JsonResponse
+    public function updatePositionsAction(int $productId, Request $request): JsonResponse
     {
-        return $this->json(['error' => 0]);
+        // We get strange request shape from Dropzone.js library. In the end
+        // $positions is array keys are imageId's and values are image position:
+        // ["imageId" => "position", "imageId2" => "position2"...]
+        $positions = get_object_vars(json_decode($request->request->all()['json']));
+
+        try {
+            $this->imageService->updatePositions($productId, $positions);
+            return $this->json([
+                'error' => 0
+            ]);
+        } catch (\Throwable $th) {
+            return $this->json([
+                'error' => 1,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }

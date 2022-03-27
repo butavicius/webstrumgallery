@@ -48,6 +48,11 @@ class WebstrumGalleryImage
      */
     private string $filename;
 
+    /**
+     * @ORM\Column(name="position", type="integer")
+     */
+    private int $position = 0;
+
     public function getId(): int
     {
         return $this->id;
@@ -76,5 +81,15 @@ class WebstrumGalleryImage
     public function setFilename(string $filename): void
     {
         $this->filename = $filename;
+    }
+
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): void
+    {
+        $this->position = $position;
     }
 }

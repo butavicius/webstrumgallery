@@ -70,6 +70,14 @@ class ImageService
     }
 
     /**
+     * Updates image positions for product's Webstrum Gallery
+     */
+    public function updatePositions(int $productId, array $positions)
+    {
+        $this->imageRepository->updatePositions($productId, $positions);
+    }
+
+    /**
      * Gets product images in a format suitable for view templates
      */
     public function getProductImages(int $productId): array
@@ -79,12 +87,24 @@ class ImageService
         $mapper = function (WebstrumGalleryImage $image) {
             return [
                 'url' => _MODULE_DIR_ . "webstrumgallery/uploads/" . $image->getFilename(),
-                'id' => $image->getId()
+                'id' => $image->getId(),
+
+                // If position has not been set yet by reordering images, keep
+                // image at the end. Using id for position ensures that.
+                'position' => $image->getPosition() > 0 ? $image->getPosition() : $image->getId(),
             ];
         };
 
-        // TODO: Use DTOs for transferring data?
-        return array_map($mapper, $images);
+        $mappedImages = array_map($mapper, $images);
+
+        // Sort by position
+        usort($mappedImages, function (array $a, array $b) {
+            return $a['position'] - $b['position'];
+        });
+
+        // TODO: Use DTOs
+        // TODO: Extract mapping logic to separate function
+        return $mappedImages;
     }
 
     /**

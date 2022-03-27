@@ -89,6 +89,7 @@ class ModuleInstaller
               `id_wg_image` int(11) NOT NULL AUTO_INCREMENT,
               `id_product` int(11) NOT NULL,
               `filename` varchar(64) NOT NULL,
+              `position` int(11) NOT NULL,
               PRIMARY KEY (`id_wg_image`)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;',
         ];

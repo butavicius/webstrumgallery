@@ -90,6 +90,8 @@ class WebstrumGallery extends Module
         $productId = $context['id_product'];
         $images = $this->imageService->getProductImages((int) $productId);
 
+        dump($images);
+
         return $this
             ->get('twig')
             ->render('@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig', ['productId' => $productId, 'images' => $images]);
