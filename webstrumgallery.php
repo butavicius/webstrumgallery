@@ -117,7 +117,7 @@ class WebstrumGallery extends Module
     }
 
     /**
-     * Registers CSS and JS for front office
+     * Registers CSS and JS for Front Office
      */
     public function hookActionFrontControllerSetMedia()
     {
