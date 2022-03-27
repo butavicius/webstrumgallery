@@ -32,9 +32,9 @@ class ModuleInstaller
     private $uploadFolder = _PS_MODULE_DIR_ . "webstrumgallery/uploads";
     private Filesystem $filesystem;
 
-    public function __construct(Filesystem $filesystem)
+    public function __construct()
     {
-        $this->filesystem = $filesystem;
+        $this->filesystem = new Filesystem();
     }
 
     /**
@@ -70,7 +70,7 @@ class ModuleInstaller
     {
         $hooks = [
             'displayAdminProductsMainStepLeftColumnBottom',
-            'displayProductExtraContent'
+            'displayFooterProduct',
         ];
 
         return $module->registerHook($hooks);

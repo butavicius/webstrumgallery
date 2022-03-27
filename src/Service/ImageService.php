@@ -24,26 +24,25 @@ declare(strict_types=1);
 namespace WebstrumGallery\Service;
 
 use Ramsey\Uuid\Uuid;
-use WebstrumGallery\Service\ImageValidator;
+use Symfony\Component\Filesystem\Filesystem;
 use WebstrumGallery\Repository\ImageRepository;
 use WebstrumGallery\Entity\WebstrumGalleryImage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
-use Symfony\Component\Filesystem\Filesystem;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 
 class ImageService
 {
     // TODO: Extract to some config file?
     private string $galleryPath = _PS_MODULE_DIR_ . 'webstrumgallery/uploads/';
     private ImageRepository $imageRepository;
-    private ImageValidator $imageValidator;
     private Filesystem $filesystem;
 
-    public function __construct(ImageRepository $imageRepository, ImageValidator $imageValidator, Filesystem $filesystem)
+    public function __construct(ImageRepository $imageRepository)
     {
         $this->imageRepository = $imageRepository;
-        $this->imageValidator = $imageValidator;
-        $this->filesystem = $filesystem;
+        $this->filesystem = new Filesystem();
     }
 
     /**
@@ -51,7 +50,7 @@ class ImageService
      */
     public function upload(UploadedFile $image, int $productId): int
     {
-        $this->imageValidator->validate($image);
+        $this->validateFile($image);
 
         $filename = $this->saveToFileSystem($image);
         $id = $this->saveToDatabase($filename, $productId);
@@ -119,5 +118,47 @@ class ImageService
     private function deleteFromDatabase(WebstrumGalleryImage $image): void
     {
         $this->imageRepository->delete($image);
+    }
+
+    /**
+     * Checks if image is allowed to be uploaded.
+     *
+     * @throws UploadedImageConstraintException
+     * @throws MemoryLimitException
+     */
+    private function validateFile(UploadedFile $file)
+    {
+        // Check that file does not exceed allowed upload size
+        $maxFileSize = \Tools::getMaxUploadSize();
+        if ($maxFileSize > 0 && $file->getSize() > $maxFileSize) {
+            throw new UploadedImageConstraintException(
+                sprintf(
+                    'Max file size allowed is "%s" bytes. Uploaded file size is "%s".',
+                    $maxFileSize,
+                    $file->getSize()
+                ),
+                UploadedImageConstraintException::EXCEEDED_SIZE
+            );
+        }
+
+        // Check that file is actually image
+        if (
+            !\ImageManager::isRealImage($file->getPathname(), $file->getClientMimeType())
+            || !\ImageManager::isCorrectImageFileExt($file->getClientOriginalName())
+            || preg_match('/\%00/', $file->getClientOriginalName()) // prevent null byte injection
+        ) {
+            throw new UploadedImageConstraintException(
+                sprintf(
+                    'Image format "%s", not recognized, allowed formats are: .gif, .jpg, .png',
+                    $file->getClientOriginalExtension()
+                ),
+                UploadedImageConstraintException::UNRECOGNIZED_FORMAT
+            );
+        }
+
+        // Check that there's enough memory for operation
+        if (!\ImageManager::checkImageMemoryLimit($file->getPathname())) {
+            throw new MemoryLimitException('Cannot upload image due to memory restrictions');
+        }
     }
 }

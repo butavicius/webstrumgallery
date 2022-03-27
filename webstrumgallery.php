@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 use WebstrumGallery\Service\ModuleInstaller;
 use WebstrumGallery\Repository\ImageRepository;
+use WebstrumGallery\Service\ImageService;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -39,6 +40,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 class WebstrumGallery extends Module
 {
     private ModuleInstaller $installer;
+    private ImageService $imageService;
 
     // TODO: How does the autowiring work here if WebstrumGallery is not in services.yml ?
     public function __construct()
@@ -49,6 +51,7 @@ class WebstrumGallery extends Module
         $this->author = 'Simas Butavičius';
         $this->need_instance = 0;
         $this->bootstrap = false;
+        $this->confirmUninstall = "This will remove all module images permanently.";
 
         parent::__construct();
 
@@ -56,7 +59,8 @@ class WebstrumGallery extends Module
         $this->description = $this->l('This module will display an additional gallery in product page.');
 
         $this->ps_versions_compliancy = array('min' => '1.7.7.0', 'max' => _PS_VERSION_);
-        $this->installer = $this->get('webstrum_gallery.service.module_installer');
+        $this->installer = new ModuleInstaller();
+        $this->imageService = $this->get('webstrum_gallery.service.image_service');
     }
 
     public function install()
@@ -79,21 +83,6 @@ class WebstrumGallery extends Module
         return $this->installer->uninstall($this);
     }
 
-    // TODO:
-    /**
-     * Add the CSS & JavaScript files you want to be added on the FO.
-     */
-
-    // TODO: Looks like addJS and addCSS are deprecated. Change to
-    // registerStyleSheet, registerJavaScript. We will probably include some JS
-    // image slider/gallery to render images on FO.
-
-    // public function hookHeader()
-    // {
-    //     $this->context->controller->addJS($this->_path . '/views/js/front.js');
-    //     $this->context->controller->addCSS($this->_path . '/views/css/front.css');
-    // }
-
     public function hookDisplayAdminProductsMainStepLeftColumnBottom($context)
     {
         /**@var ImageRepository $repository */
@@ -112,5 +101,16 @@ class WebstrumGallery extends Module
         $images = array_map($mapFunc, $records);
 
         return $this->get('twig')->render('@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig', ['productId' => $productId, 'images' => $images, 'editable' => true]);
+    }
+
+    public function hookDisplayFooterProduct($context)
+    {
+
+        $productId = $context['product']->id;
+        // $images = $this->imageService->getProductImages($productId);;
+
+        $this->context->smarty->assign(['testvar' => $productId]);
+
+        return $this->display(__FILE__, 'views/templates/hook/imagegallery.tpl');
     }
 }

@@ -14,8 +14,3 @@ services:
     class: WebstrumGallery\Service\ImageService
     arguments:
       - "@webstrum_gallery.repository.image_repository"
-
-  WebstrumGallery\Controller\ImageController:
-    class: WebstrumGallery\Controller\ImageController
-    arguments:
-      - "@webstrum_gallery.service.image_service"
