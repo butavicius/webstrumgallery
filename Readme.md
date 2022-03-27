@@ -1,6 +1,6 @@
 # Webstrum Gallery
 
-This module adds an image gallery (in addition to the main one) on product page. The gallery is displayed on the bottom of product page (the yellow thing :grin:).
+This PrestaShop module adds an image gallery (in addition to the main one) to the bottom of product page.
 
 ## Features:
 * Slider-type gallery. You can click on arrows or swipe through images.
@@ -8,6 +8,9 @@ This module adds an image gallery (in addition to the main one) on product page.
 * Customizable style.
 
 <img src="screenshots/frontend.png" height="800px" />
+
+## Requirements:
+Prestashop 1.7.7+
 
 ## Installation:
 1) Clone repository:
