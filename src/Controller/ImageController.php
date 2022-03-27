@@ -46,9 +46,14 @@ class ImageController extends FrameworkBundleAdminController
         $requestImage = $request->files->get('wg-image');
 
         try {
-            $this->imageUploader->upload($requestImage, $productId);
+            $imageId = $this->imageUploader->upload($requestImage, $productId);
 
-            return $this->json(['error' => 0]);
+            return $this->json([
+                'error' => 0,
+                'url_delete' => $this->generateUrl('admin_product_wg_image_delete', ['imageId' => $imageId]),
+                'id' => $imageId
+
+            ]);
         } catch (\Throwable $th) {
             return $this->json(['error' => 1, 'message' => $th->getMessage()]);
         }

@@ -45,11 +45,15 @@ class ImageUploader
     /**
      * Uploads file to Webstrum Gallery.
      */
-    public function upload(UploadedFile $image, int $productId): void
+    public function upload(UploadedFile $image, int $productId): int
     {
         $this->imageValidator->validate($image);
+
         $filename = $this->saveToFileSystem($image);
-        $this->saveToDatabase($filename, $productId);
+        $id = $this->saveToDatabase($filename, $productId);
+
+        return $id;
+
     }
 
     /**
@@ -77,8 +81,10 @@ class ImageUploader
     /**
      * Inserts database record for uploaded image.
      */
-    private function saveToDatabase(string $filename, int $productId): void
+    private function saveToDatabase(string $filename, int $productId): int
     {
-        $this->imageRepository->insert($productId, $filename);
+        $insertedImage = $this->imageRepository->insert($productId, $filename);
+
+        return $insertedImage->getId();
     }
 }

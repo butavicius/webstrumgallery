@@ -28,7 +28,12 @@ use WebstrumGallery\Entity\WebstrumGalleryImage;
 
 class ImageRepository extends EntityRepository
 {
-    public function insert(int $productId, string $filename): void
+    /**
+     * Inserts image into database.
+     * 
+     * @return WebstrumGalleryImage inserted image.
+     */
+    public function insert(int $productId, string $filename): WebstrumGalleryImage
     {
         $image = new WebstrumGalleryImage();
 
@@ -38,6 +43,8 @@ class ImageRepository extends EntityRepository
         $em = $this->getEntityManager();
         $em->persist($image);
         $em->flush();
+
+        return $image;
     }
 
     public function delete(WebstrumGalleryImage $image): void
