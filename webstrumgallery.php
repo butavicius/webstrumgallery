@@ -27,8 +27,8 @@
 
 declare(strict_types=1);
 
-use WebstrumGallery\Repository\ImageRepository;
 use WebstrumGallery\Service\ModuleInstaller;
+use WebstrumGallery\Repository\ImageRepository;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -40,6 +40,7 @@ class WebstrumGallery extends Module
 {
     private ModuleInstaller $installer;
 
+    // TODO: How does the autowiring work here if WebstrumGallery is not in services.yml ?
     public function __construct()
     {
         $this->name = 'webstrumgallery';
@@ -55,14 +56,15 @@ class WebstrumGallery extends Module
         $this->description = $this->l('This module will display an additional gallery in product page.');
 
         $this->ps_versions_compliancy = array('min' => '1.7.7.0', 'max' => _PS_VERSION_);
-
-        $this->installer = new ModuleInstaller();
+        $this->installer = $this->get('webstrum_gallery.service.module_installer');
     }
 
     public function install()
     {
         if (!parent::install())
             return false;
+
+        dump($this->installer);
 
         return $this->installer->install($this);
     }
@@ -71,6 +73,8 @@ class WebstrumGallery extends Module
     {
         if (!parent::uninstall())
             return false;
+
+        dump($this->installer);
 
         return $this->installer->uninstall($this);
     }

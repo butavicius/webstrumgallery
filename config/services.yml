@@ -9,6 +9,11 @@ services:
   webstrum_gallery.service.image_validator:
     class: WebstrumGallery\Service\ImageValidator
 
+  webstrum_gallery.service.module_installer:
+    class: WebstrumGallery\Service\ModuleInstaller
+    arguments:
+      - "@filesystem"
+
   webstrum_gallery.service.image_service:
     class: WebstrumGallery\Service\ImageService
     arguments:

@@ -32,9 +32,9 @@ class ModuleInstaller
     private $uploadFolder = _PS_MODULE_DIR_ . "webstrumgallery/uploads";
     private Filesystem $filesystem;
 
-    public function __construct()
+    public function __construct(Filesystem $filesystem)
     {
-        $this->filesystem = new Filesystem();
+        $this->filesystem = $filesystem;
     }
 
     /**
