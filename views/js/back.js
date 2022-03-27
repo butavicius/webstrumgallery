@@ -48,72 +48,9 @@ window.webstrumGalleryImagesProduct = (function () {
   }
 
   return {
-    toggleExpand() {
-      if (expanderElem.hasClass("expand")) {
-        dropZoneElem.css("height", "auto");
-        expanderElem.removeClass("expand").addClass("compress");
-      } else {
-        dropZoneElem.css("height", "");
-        expanderElem.removeClass("compress").addClass("expand");
-      }
-    },
-    displayExpander() {
-      expanderElem.show();
-    },
-    hideExpander() {
-      expanderElem.hide();
-    },
-    shouldDisplayExpander() {
-      const oldHeight = dropZoneElem.css("height");
-
-      dropZoneElem.css("height", "");
-      const closedHeight = dropZoneElem.outerHeight();
-      const realHeight = dropZoneElem[0].scrollHeight;
-
-      if (oldHeight !== "0px") {
-        dropZoneElem.css("height", oldHeight);
-      }
-
-      return (
-        realHeight > closedHeight &&
-        dropZoneElem.find(".dz-preview:not(.openfilemanager)").length
-      );
-    },
-    updateExpander() {
-      if (this.shouldDisplayExpander()) {
-        this.displayExpander();
-      }
-    },
-    initExpander() {
-      if (this.shouldDisplayExpander()) {
-        this.displayExpander();
-        expanderElem.addClass("expand");
-      }
-
-      const self = this;
-      $(document).on(
-        "click",
-        "#wg-product-images-container .dropzone-expander",
-        () => {
-          self.toggleExpand();
-        }
-      );
-    },
     init() {
       Dropzone.autoDiscover = false;
       const errorElem = $("#wg-product-images-dropzone-error");
-
-      // on click image, display custom form
-      $(document).on(
-        "click",
-        "#wg-product-images-dropzone .dz-preview",
-        function () {
-          if (!$(this).attr("data-id")) {
-            return;
-          }
-          webstrumGalleryFormImagesProduct.form($(this).attr("data-id"));
-        }
-      );
 
       const dropzoneOptions = {
         url: dropZoneElem.attr("url-upload"),
@@ -262,128 +199,128 @@ window.webstrumGalleryImagesProduct = (function () {
   };
 })();
 
-window.webstrumGalleryFormImagesProduct = (function () {
-  const dropZoneElem = $("#wg-product-images-dropzone");
-  const formZoneElem = $("#wg-product-images-form-container");
+// window.webstrumGalleryFormImagesProduct = (function () {
+//   const dropZoneElem = $("#wg-product-images-dropzone");
+//   const formZoneElem = $("#wg-product-images-form-container");
 
-  // default state
-  formZoneElem.hide();
+//   // default state
+//   formZoneElem.hide();
 
-  formZoneElem.magnificPopup({
-    delegate: "a.open-image",
-    type: "image",
-  });
+//   formZoneElem.magnificPopup({
+//     delegate: "a.open-image",
+//     type: "image",
+//   });
 
-  function toggleColDropzone(enlarge) {
-    const smallCol = "col-md-8";
-    const largeCol = "col-md-12";
+//   function toggleColDropzone(enlarge) {
+//     const smallCol = "col-md-8";
+//     const largeCol = "col-md-12";
 
-    if (enlarge === true) {
-      dropZoneElem.removeClass(smallCol).addClass(largeCol);
-    } else {
-      dropZoneElem.removeClass(largeCol).addClass(smallCol);
-    }
-  }
+//     if (enlarge === true) {
+//       dropZoneElem.removeClass(smallCol).addClass(largeCol);
+//     } else {
+//       dropZoneElem.removeClass(largeCol).addClass(smallCol);
+//     }
+//   }
 
-  return {
-    form(id) {
-      dropZoneElem.find(".dz-preview.active").removeClass("active");
-      dropZoneElem.find(`.dz-preview[data-id='${id}']`).addClass("active");
-      if (!imagesProduct.shouldDisplayExpander()) {
-        dropZoneElem.css("height", "auto");
-      }
-      $.ajax({
-        url: dropZoneElem
-          .find(`.dz-preview[data-id='${id}']`)
-          .attr("url-update"),
-        success(response) {
-          formZoneElem.find("#wg-product-images-form").html(response);
-          form.switchLanguage($("#wg-form_switch_language").val());
-        },
-        complete() {
-          toggleColDropzone(false);
-          formZoneElem.show();
-          dropZoneElem.addClass("d-none d-md-block");
-        },
-      });
-    },
-    send(id) {
-      $.ajax({
-        type: "POST",
-        url: dropZoneElem
-          .find(`.dz-preview[data-id='${id}']`)
-          .attr("url-update"),
-        data: formZoneElem.find("textarea, input").serialize(),
-        beforeSend() {
-          formZoneElem.find(".actions button").prop("disabled", "disabled");
-          formZoneElem.find("ul.text-danger").remove();
-          formZoneElem.find("*.has-danger").removeClass("has-danger");
-        },
-        success() {
-          if (formZoneElem.find("#wg-form_image_cover:checked").length) {
-            imagesProduct.updateDisplayCover(id);
-          }
-        },
-        error(response) {
-          if (response && response.responseText) {
-            $.each(jQuery.parseJSON(response.responseText), (key, errors) => {
-              let html = '<ul class="list-unstyled text-danger">';
-              $.each(errors, (errorsKey, error) => {
-                html += `<li>${error}</li>`;
-              });
-              html += "</ul>";
+//   return {
+//     form(id) {
+//       dropZoneElem.find(".dz-preview.active").removeClass("active");
+//       dropZoneElem.find(`.dz-preview[data-id='${id}']`).addClass("active");
+//       if (!imagesProduct.shouldDisplayExpander()) {
+//         dropZoneElem.css("height", "auto");
+//       }
+//       $.ajax({
+//         url: dropZoneElem
+//           .find(`.dz-preview[data-id='${id}']`)
+//           .attr("url-update"),
+//         success(response) {
+//           formZoneElem.find("#wg-product-images-form").html(response);
+//           form.switchLanguage($("#wg-form_switch_language").val());
+//         },
+//         complete() {
+//           toggleColDropzone(false);
+//           formZoneElem.show();
+//           dropZoneElem.addClass("d-none d-md-block");
+//         },
+//       });
+//     },
+//     send(id) {
+//       $.ajax({
+//         type: "POST",
+//         url: dropZoneElem
+//           .find(`.dz-preview[data-id='${id}']`)
+//           .attr("url-update"),
+//         data: formZoneElem.find("textarea, input").serialize(),
+//         beforeSend() {
+//           formZoneElem.find(".actions button").prop("disabled", "disabled");
+//           formZoneElem.find("ul.text-danger").remove();
+//           formZoneElem.find("*.has-danger").removeClass("has-danger");
+//         },
+//         success() {
+//           if (formZoneElem.find("#wg-form_image_cover:checked").length) {
+//             imagesProduct.updateDisplayCover(id);
+//           }
+//         },
+//         error(response) {
+//           if (response && response.responseText) {
+//             $.each(jQuery.parseJSON(response.responseText), (key, errors) => {
+//               let html = '<ul class="list-unstyled text-danger">';
+//               $.each(errors, (errorsKey, error) => {
+//                 html += `<li>${error}</li>`;
+//               });
+//               html += "</ul>";
 
-              $(`#wg-form_image_${key}`).parent().append(html);
-              $(`#wg-form_image_${key}`).parent().addClass("has-danger");
-            });
-          }
-        },
-        complete() {
-          formZoneElem.find(".actions button").removeAttr("disabled");
-        },
-      });
-    },
-    delete(id) {
-      modalConfirmation
-        .create(
-          translate_javascripts["Are you sure you want to delete this item?"],
-          null,
-          {
-            onContinue() {
-              $.ajax({
-                url: dropZoneElem
-                  .find(`.dz-preview[data-id="${id}"]`)
-                  .attr("url-delete"),
-                complete() {
-                  formZoneElem.find(".close").click();
-                  const wasCover = !!dropZoneElem.find(
-                    `.dz-preview[data-id="${id}"] .iscover`
-                  ).length;
-                  dropZoneElem.find(`.dz-preview[data-id="${id}"]`).remove();
-                  $(`.images .product-combination-image [value=${id}]`)
-                    .parent()
-                    .remove();
-                  imagesProduct.checkDropzoneMode();
-                  if (wasCover === true) {
-                    // The controller will choose the oldest image as the new cover.
-                    imagesProduct.updateDisplayCover(
-                      imagesProduct.getOlderImageId()
-                    );
-                  }
-                },
-              });
-            },
-          }
-        )
-        .show();
-    },
-    close() {
-      toggleColDropzone(true);
-      dropZoneElem.removeClass("d-none d-md-block");
-      dropZoneElem.css("height", "");
-      formZoneElem.find("#product-images-form").html("");
-      formZoneElem.hide();
-      dropZoneElem.find(".dz-preview.active").removeClass("active");
-    },
-  };
-})();
+//               $(`#wg-form_image_${key}`).parent().append(html);
+//               $(`#wg-form_image_${key}`).parent().addClass("has-danger");
+//             });
+//           }
+//         },
+//         complete() {
+//           formZoneElem.find(".actions button").removeAttr("disabled");
+//         },
+//       });
+//     },
+//     delete(id) {
+//       modalConfirmation
+//         .create(
+//           translate_javascripts["Are you sure you want to delete this item?"],
+//           null,
+//           {
+//             onContinue() {
+//               $.ajax({
+//                 url: dropZoneElem
+//                   .find(`.dz-preview[data-id="${id}"]`)
+//                   .attr("url-delete"),
+//                 complete() {
+//                   formZoneElem.find(".close").click();
+//                   const wasCover = !!dropZoneElem.find(
+//                     `.dz-preview[data-id="${id}"] .iscover`
+//                   ).length;
+//                   dropZoneElem.find(`.dz-preview[data-id="${id}"]`).remove();
+//                   $(`.images .product-combination-image [value=${id}]`)
+//                     .parent()
+//                     .remove();
+//                   imagesProduct.checkDropzoneMode();
+//                   if (wasCover === true) {
+//                     // The controller will choose the oldest image as the new cover.
+//                     imagesProduct.updateDisplayCover(
+//                       imagesProduct.getOlderImageId()
+//                     );
+//                   }
+//                 },
+//               });
+//             },
+//           }
+//         )
+//         .show();
+//     },
+//     close() {
+//       toggleColDropzone(true);
+//       dropZoneElem.removeClass("d-none d-md-block");
+//       dropZoneElem.css("height", "");
+//       formZoneElem.find("#product-images-form").html("");
+//       formZoneElem.hide();
+//       dropZoneElem.find(".dz-preview.active").removeClass("active");
+//     },
+//   };
+// })();
