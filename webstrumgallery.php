@@ -28,7 +28,6 @@
 declare(strict_types=1);
 
 use WebstrumGallery\Service\ModuleInstaller;
-use WebstrumGallery\Repository\ImageRepository;
 use WebstrumGallery\Service\ImageService;
 
 if (!defined('_PS_VERSION_')) {
@@ -83,34 +82,60 @@ class WebstrumGallery extends Module
         return $this->installer->uninstall($this);
     }
 
+    /**
+     * Displays image upload form template
+     */
     public function hookDisplayAdminProductsMainStepLeftColumnBottom($context)
     {
-        /**@var ImageRepository $repository */
-        $repository = $this->get('webstrum_gallery.repository.image_repository');
         $productId = $context['id_product'];
+        $images = $this->imageService->getProductImages((int) $productId);
 
-        $records = $repository->findByProductId($productId);
-
-        // TODO: Do this mapping elsewhere or make repository return already formatted array
-        $mapFunc = function (object $record) {
-            return [
-                'url' => _MODULE_DIR_ . "webstrumgallery/uploads/" . $record->getFilename(),
-                'id' => $record->getId()
-            ];
-        };
-        $images = array_map($mapFunc, $records);
-
-        return $this->get('twig')->render('@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig', ['productId' => $productId, 'images' => $images, 'editable' => true]);
+        return $this
+            ->get('twig')
+            ->render('@Modules/webstrumgallery/views/templates/hook/imageuploadform.html.twig', ['productId' => $productId, 'images' => $images]);
     }
 
+    /**
+     * Displays image gallery template
+     */
     public function hookDisplayFooterProduct($context)
     {
-
         $productId = $context['product']->id;
-        // $images = $this->imageService->getProductImages($productId);;
-
-        $this->context->smarty->assign(['testvar' => $productId]);
+        $images = $this->imageService->getProductImages($productId);
+        $this->context->smarty->assign(['images' => $images]);
 
         return $this->display(__FILE__, 'views/templates/hook/imagegallery.tpl');
+    }
+
+    /**
+     * Registers CSS and JS for front office
+     */
+    public function hookActionFrontControllerSetMedia() {
+        $this->context->controller->registerStylesheet(
+            'webstrum-gallery-style',
+            $this->_path.'views/css/splide.min.css',
+            [
+                'media' => 'all',
+                'priority' => 1000,
+            ]
+        );
+
+        $this->context->controller->registerJavascript(
+            'webstrum-gallery-splide',
+            $this->_path.'views/js/splide.min.js',
+            [
+                'position' => 'bottom',
+                'priority' => 1000,
+            ]
+        );
+
+        $this->context->controller->registerJavascript(
+            'webstrum-gallery-front',
+            $this->_path.'views/js/front.js',
+            [
+                'position' => 'bottom',
+                'priority' => 999,
+            ]
+        );
     }
 }

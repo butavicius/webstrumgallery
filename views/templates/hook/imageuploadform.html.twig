@@ -32,13 +32,11 @@
 			<a>or select files</a><br/>
 		</div>
 		{% if images is defined %}
-			{% if editable %}
 				<div class="dz-preview disabled wg-openfilemanager">
 					<div class="dz-image" style="background-color: gold; display: flex; justify-content: center; align-items: center; overflow: hidden">
 						<span style="font-size: 5rem; cursor: pointer">+</span>
 					</div>
 				</div>
-			{% endif %}
 			{% for image in images %}
 				<div class="dz-preview dz-image-preview ui-sortable-handle dz-complete" data-id="{{ image.id }}" url-delete="{{ path('admin_product_wg_image_delete', {'imageId': image.id})}}" style="z-index: 1; position: relative; opacity: 1; left: 0px; top: 0px;">
 					<div class="dz-image"><img data-dz-thumbnail="" alt="" src="{{ image.url }}"></div>

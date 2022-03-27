@@ -24,5 +24,14 @@
 * *}
 
 <h2>Webstrum gallery</h2>
-<p>Gallery placeholder</p>
-<p>{$testvar}</p>
+<div class="splide">
+    <div class="splide__track">
+        <ul class="splide__list">
+            {foreach $images as $image}
+                <li class="splide__slide">
+                    <img src="{$image.url}" />
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+</div>

@@ -71,6 +71,7 @@ class ModuleInstaller
         $hooks = [
             'displayAdminProductsMainStepLeftColumnBottom',
             'displayFooterProduct',
+            'actionFrontControllerSetMedia'
         ];
 
         return $module->registerHook($hooks);

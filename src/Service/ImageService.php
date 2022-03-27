@@ -70,6 +70,24 @@ class ImageService
     }
 
     /**
+     * Gets product images in a format suitable for view templates
+     */
+    public function getProductImages(int $productId): array
+    {
+        $images = $this->imageRepository->findByProductId($productId);
+
+        $mapper = function (WebstrumGalleryImage $image) {
+            return [
+                'url' => _MODULE_DIR_ . "webstrumgallery/uploads/" . $image->getFilename(),
+                'id' => $image->getId()
+            ];
+        };
+
+        // TODO: Use DTOs for transferring data?
+        return array_map($mapper, $images);
+    }
+
+    /**
      * Saves image file to Webstrum Gallery module's upload folder.
      * 
      * @return string saved filename with extension 
