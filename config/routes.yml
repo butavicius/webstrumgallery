@@ -10,7 +10,7 @@ admin_product_wg_image_delete:
       _controller: 'WebstrumGallery\Controller\ImageController::deleteAction'
 
 admin_product_wg_image_positions:
-    path: webstrumgallery/positions/{productId}
-    methods: [GET, POST]
+    path: webstrumgallery/positions/{imageId}
+    methods: [POST]
     defaults:
       _controller: 'WebstrumGallery\Controller\ImageController::updatePositionsAction'

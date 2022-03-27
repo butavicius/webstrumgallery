@@ -80,4 +80,12 @@ class ImageController extends FrameworkBundleAdminController
             ]);
         }
     }
+
+    /**
+     * Updates image positions in Webstrum Gallery.
+     */
+    public function updatePositionsAction(int $imageId): JsonResponse
+    {
+        return $this->json(['error' => 0]);
+    }
 }
