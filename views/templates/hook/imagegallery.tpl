@@ -24,12 +24,12 @@
 * *}
 
 <h2>Webstrum gallery</h2>
-<div class="splide">
+<div class="webstrum-gallery splide" style="background-color: rgb(245, 220, 82); border-radius: 2rem; margin-top: 2rem">
     <div class="splide__track">
         <ul class="splide__list">
             {foreach $images as $image}
-                <li class="splide__slide">
-                    <img src="{$image.url}" />
+                <li class="splide__slide" style="padding: 2rem">
+                    <img src="{$image.url}" style="height: 400px;width: 100%;object-fit: contain" />
                 </li>
             {/foreach}
         </ul>

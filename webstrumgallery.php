@@ -41,7 +41,6 @@ class WebstrumGallery extends Module
     private ModuleInstaller $installer;
     private ImageService $imageService;
 
-    // TODO: How does the autowiring work here if WebstrumGallery is not in services.yml ?
     public function __construct()
     {
         $this->name = 'webstrumgallery';
@@ -58,6 +57,7 @@ class WebstrumGallery extends Module
         $this->description = $this->l('This module will display an additional gallery in product page.');
 
         $this->ps_versions_compliancy = array('min' => '1.7.7.0', 'max' => _PS_VERSION_);
+
         $this->installer = new ModuleInstaller();
         $this->imageService = $this->get('webstrum_gallery.service.image_service');
     }
@@ -83,7 +83,7 @@ class WebstrumGallery extends Module
     }
 
     /**
-     * Displays image upload form template
+     * Displays image upload form template in BO
      */
     public function hookDisplayAdminProductsMainStepLeftColumnBottom($context)
     {
@@ -96,7 +96,7 @@ class WebstrumGallery extends Module
     }
 
     /**
-     * Displays image gallery template
+     * Displays image gallery template in FO
      */
     public function hookDisplayFooterProduct($context)
     {
