@@ -62,8 +62,9 @@ class ImageController extends FrameworkBundleAdminController
     /**
      * Deletes image
      */
-    public function deleteImage($productId): JsonResponse
+    public function deleteAction($imageId): JsonResponse
     {
-        return $this->json(['status' => 'success', 'productId' => $productId]);
+        //TODO: Rename ImageUploader to ImageService and implement delete method
+        return $this->json(['status' => 'success', 'imageId' => $imageId]);
     }
 }

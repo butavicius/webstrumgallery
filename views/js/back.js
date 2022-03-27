@@ -36,7 +36,6 @@ $(document).ready(() => {
 
 window.webstrumGalleryImagesProduct = (function () {
   const dropZoneElem = $("#wg-product-images-dropzone");
-  const expanderElem = $("#wg-product-images-container .dropzone-expander");
 
   function checkDropzoneMode() {
     if (!dropZoneElem.find(".dz-preview:not(.openfilemanager)").length) {
@@ -67,7 +66,6 @@ window.webstrumGalleryImagesProduct = (function () {
         dictCancelUpload: translate_javascripts.Delete,
         sending() {
           checkDropzoneMode();
-          expanderElem.addClass("expand").click();
           errorElem.html("");
         },
         queuecomplete() {
@@ -90,12 +88,18 @@ window.webstrumGalleryImagesProduct = (function () {
 
           // define id image to file preview
           $(file.previewElement).attr("data-id", response.id);
-          $(file.previewElement).attr("url-update", response.url_update);
-          $(file.previewElement).attr("url-delete", response.url_delete);
-          $(file.previewElement).addClass("ui-sortable-handle");
-          if (response.cover === 1) {
-            imagesProduct.updateDisplayCover(response.id);
-          }
+          // $(file.previewElement).addClass("ui-sortable-handle");
+
+          // Attach delete handler to "delete" text element
+          $(file.previewElement)
+            .find(".dz-remove")
+            .first()
+            .on("click", () => {
+              $.ajax({
+                type: "DELETE",
+                url: response.url_delete,
+              });
+            });
         },
         error(file, response) {
           let message = "";
@@ -127,6 +131,23 @@ window.webstrumGalleryImagesProduct = (function () {
           } else {
             dropZoneElem.find(".dz-preview.openfilemanager").hide();
           }
+
+          // Attach delete handlers to images
+          dropZoneElem.find(".dz-image-preview").each((index, imageElement) => {
+            const imageId = $(imageElement).attr("data-id");
+            const removeElement = $(imageElement).find(".dz-remove").first();
+
+            removeElement.on("click", () => {
+              $.ajax({
+                type: "DELETE",
+                url: $(imageElement).attr("url-delete"),
+                success: () => {
+                  imageElement.remove();
+                },
+              });
+            });
+          });
+
           // init sortable
           dropZoneElem.sortable({
             items: "div.dz-preview:not(.disabled)",
@@ -176,12 +197,6 @@ window.webstrumGalleryImagesProduct = (function () {
       };
 
       dropZoneElem.dropzone(jQuery.extend(dropzoneOptions));
-    },
-    updateDisplayCover(idImage) {
-      $("#wg-product-images-dropzone .dz-preview .iscover").remove();
-      $(`#wg-product-images-dropzone .dz-preview[data-id="${idImage}"]`).append(
-        `<div class="iscover">${translate_javascripts.Cover}</div>`
-      );
     },
     checkDropzoneMode() {
       checkDropzoneMode();
