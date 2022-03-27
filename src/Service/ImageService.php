@@ -109,6 +109,15 @@ class ImageService
     }
 
     /**
+     * Deletes folder with all product images
+     */
+    public function deleteProductImages(int $productId) {
+        $productGalleryDirectory = "{$this->galleryPath}{$productId}";
+
+        $this->filesystem->remove($productGalleryDirectory);
+    }
+
+    /**
      * Saves image file to Webstrum Gallery module's upload folder.
      * 
      * @return string saved filename with extension 

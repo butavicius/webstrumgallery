@@ -74,7 +74,7 @@ class ModuleInstaller
             'displayFooterProduct',
             'actionFrontControllerSetMedia',
             'displayBackOfficeHeader',
-            // 'actionProductDelete'
+            'actionProductDelete'
         ];
 
         return $module->registerHook($hooks);

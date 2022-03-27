@@ -182,11 +182,13 @@ class WebstrumGallery extends Module
      */
     public function hookActionProductDelete($context)
     {
-        dump($context);
+        $imageService = $this->get('webstrum_gallery.service.image_service');
+        $productId = $context['id_product'];
+
+        $imageService->deleteProductImages($productId);
     }
 
     // TODO: Consider extracting configuration page form generation to separate class
-
     /**
      * This method handles the module's configuration page
      * @return string The page's HTML content 
