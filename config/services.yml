@@ -6,11 +6,8 @@ services:
     arguments:
       - WebstrumGallery\Entity\WebstrumGalleryImage
 
-  webstrum_gallery.service.module_installer:
-    public: true
-    class: WebstrumGallery\Service\ModuleInstaller
-
   webstrum_gallery.service.image_service:
+    public: true
     class: WebstrumGallery\Service\ImageService
     arguments:
       - "@webstrum_gallery.repository.image_repository"

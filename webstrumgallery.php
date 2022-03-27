@@ -28,7 +28,6 @@
 declare(strict_types=1);
 
 use WebstrumGallery\Service\ModuleInstaller;
-use WebstrumGallery\Service\ImageService;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -39,7 +38,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 class WebstrumGallery extends Module
 {
     private ModuleInstaller $installer;
-    private ImageService $imageService;
 
     public function __construct()
     {
@@ -58,8 +56,7 @@ class WebstrumGallery extends Module
 
         $this->ps_versions_compliancy = array('min' => '1.7.7.0', 'max' => _PS_VERSION_);
 
-        $this->installer = $this->get('webstrum_gallery.service.module_installer');
-        $this->imageService = $this->get('webstrum_gallery.service.image_service');
+        $this->installer = new ModuleInstaller();
     }
 
     public function install()
@@ -69,7 +66,7 @@ class WebstrumGallery extends Module
 
         Configuration::updateValue('WEBSTRUMGALLERY_TITLE', 'Webstrum Gallery');
         Configuration::updateValue('WEBSTRUMGALLERY_COLOR', '#ffd700');
-        Configuration::updateValue('WEBSTRUMGALLERY_CORNERS', '0');
+        Configuration::updateValue('WEBSTRUMGALLERY_CORNERS', '1rem');
 
         return $this->installer->install($this);
     }
@@ -91,8 +88,10 @@ class WebstrumGallery extends Module
      */
     public function hookDisplayAdminProductsMainStepLeftColumnBottom($context)
     {
+
+        $imageService = $this->get('webstrum_gallery.service.image_service');
         $productId = $context['id_product'];
-        $images = $this->imageService->getProductImages((int) $productId);
+        $images = $imageService->getProductImages((int) $productId);
 
         $galleryColor = Configuration::get('WEBSTRUMGALLERY_COLOR');
         $galleryTitle = Configuration::get('WEBSTRUMGALLERY_TITLE');
@@ -116,8 +115,10 @@ class WebstrumGallery extends Module
      */
     public function hookDisplayFooterProduct($context)
     {
+
+        $imageService = $this->get('webstrum_gallery.service.image_service');
         $productId = $context['product']->id;
-        $images = $this->imageService->getProductImages($productId);
+        $images = $imageService->getProductImages($productId);
 
         $galleryColor = Configuration::get('WEBSTRUMGALLERY_COLOR');
         $galleryTitle = Configuration::get('WEBSTRUMGALLERY_TITLE');
@@ -179,7 +180,8 @@ class WebstrumGallery extends Module
     /**
      * Deletes images when product is deleted
      */
-    public function hookActionProductDelete($context) {
+    public function hookActionProductDelete($context)
+    {
         dump($context);
     }
 
